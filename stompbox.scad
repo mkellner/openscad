@@ -35,20 +35,20 @@ module box() {
 //swdp3t();
 
 module config1() {		// good for HogsFoot, Screaming Bird
-	offsetStompX = 15;
+	offsetStompX = 12;
 	offsetStompY = 15;
-	offsetLEDX = inBoxW - 15;
+	offsetLEDX = inBoxW - 12;
 	offsetLEDY = 15;
-	offsetPotX = inBoxW - 10;
-	offsetPotY = inBoxH - 10;
+	offsetPotX = inBoxW - 12;
+	offsetPotY = inBoxH - 12;
 	offsetDCX = 15;
 	offsetDCY = inBoxH-.1;
 	offsetDCZ = 10;
-	offsetJackInX = inBoxW;
-	offsetJackInY = 40;
+	offsetJackInX = inBoxW-.1;
+	offsetJackInY = 37;
 	offsetJackInZ = 10.5;
-	offsetJackOutX = 0;
-	offsetJackOutY = 40;
+	offsetJackOutX = .1;
+	offsetJackOutY = 37;
 	offsetJackOutZ = 10.5;
 
 	difference() {

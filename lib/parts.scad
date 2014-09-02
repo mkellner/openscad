@@ -1,10 +1,12 @@
 // @2014 - mkellner@robotranch.org
 
+slop = 0.4;
+
 module potentiometer(angle = 0) {
 
-	potCylR = 17.04 / 2;
+	potCylR = (17 + slop) / 2;
 	potCylD = 9.3;
-	potShaftR = 6.76 / 2;
+	potShaftR = (6.76 + slop) / 2;
 	potShaftD = 15;
 	potBoard = 12;
 	potBoardD = 6.3;
@@ -30,7 +32,7 @@ module sw3pdt() {
 	swBodyW = 18;
 	swBodyH = 17;
 	swBodyD = 20;
-	swShaftR = 11.72 / 2;
+	swShaftR = (11.72 + slop) / 2;
 	swShaftD = 12.5;
 	swShaft2R = 8 / 2;
 	swShaft2D = 5.11;
@@ -53,7 +55,7 @@ module swdp3t() {
     swBodyW = 12.62;
     swBodyH = 13;
     swBodyD = 14.5;
-    swShaftR = 5.8 / 2;
+    swShaftR = (5.8 + slop) / 2;
     swShaftD = 8.5;
 
 	rotate([0, 180, 0])
@@ -66,7 +68,7 @@ module swdp3t() {
 }
 
 module socket(angle = 90) {
-	sktR = 8.67 / 2;
+	sktR = (8.67 + slop) / 2;
 	sktD = 7.6;
 	sktBaseR = 20.40 / 2;
 	sktBaseH = 23.6;
@@ -80,7 +82,7 @@ module socket(angle = 90) {
 }
 
 module smDcJack() {
-	dcJackR = 7.75 / 2;
+	dcJackR = (7.75 + slop) / 2;
 	dcJackD = 5.5;
 	dcJackBaseR = 10.75 / 2;
 	dcJackBaseH = 15.65;
@@ -94,7 +96,7 @@ module smDcJack() {
 }
 
 module ledMount() {
-	ledMountR = 7.75 / 2;
+	ledMountR = (7.75 + slop) / 2;
 	ledMountD = 10;
 	ledMountBaseR1 = 9 / 2;
 	ledMountBaseR2 = 8 / 2;
