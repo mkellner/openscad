@@ -1,3 +1,4 @@
+// @2014 - mkellner@robotranch.org
 
 module potentiometer(angle = 0) {
 
