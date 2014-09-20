@@ -1,8 +1,13 @@
 // @2014 - mkellner@robotranch.orog
-$fn=15;
+$fn=25;
 
 use <lib/parts.scad>;
 use <lib/shapes.scad>;
+
+quarterR = 26.5 / 2;
+quarterH = 2;
+
+labelSlice = 0;
 
 textDepth = .5;
 
@@ -16,10 +21,73 @@ outBoxW = inBoxW; // + wallD * 2;
 outBoxH = inBoxH; // + wallD * 2;
 outBoxD = inBoxD + wallD;
 
+footD = 4;
+footWallD = 3;
+
+module quarter() {
+	cylinder(r=quarterR,h=quarterH+5,center=true);
+}
+
 module label(tx = "label", sz = 5, depth=1, font = "Courier", halign = "center", valign = "center") {
 	linear_extrude(height = depth)
 		text(tx, size=sz, font=font, halign=halign, valign=valign);
 
+}
+module foot() {
+	difference()
+		{
+		translate([0, 0, -wallD + inBoxD])
+			minkowski() {
+				cube([outBoxW, outBoxH, footD + wallD]);
+				cylinder(r=3,h=.5);
+			}
+		translate([-wallD, -wallD, -wallD/2-.2])
+			rotate([2,0,0])
+				cube([outBoxW + 2*wallD, wallD+1, outBoxD]);
+		translate([-wallD, outBoxH-1, -wallD/2-.2])
+			rotate([-2,0,0])
+				cube([outBoxW + 2*wallD, wallD+1, outBoxD]);
+		translate([-wallD, -wallD, -wallD/2-.2])
+			rotate([0,-2,0])
+				cube([wallD+1, outBoxH + 2*wallD, outBoxD]);
+		translate([outBoxW-1, -wallD, -wallD/2-.2])
+			rotate([0,2,0])
+				cube([wallD+2, outBoxH + 2*wallD, outBoxD]);
+
+		translate([0, -11, outBoxD-10-wallD/2-.2])
+			rotate([0, 0, 45])
+				cube([10, 20, 10]);
+		translate([-10.5, outBoxH, outBoxD-10-wallD/2-.2])
+			rotate([0, 0, -45])
+				cube([10, 20, 10]);
+		translate([outBoxW-5, -1, outBoxD-10-wallD/2-.2])
+			rotate([0, 0, -45])
+				cube([10, 20, 10]);
+		translate([outBoxW+1, outBoxH-5, outBoxD-10-wallD/2-.2])
+			rotate([0, 0, 45])
+				cube([10, 20, 10]);
+
+		//config1();
+		box();
+		translate([outBoxW/2, -11, inBoxD+2.5-wallD])
+			#quarter();
+
+		translate([wallD+footWallD, wallD+footWallD, wallD-3])
+			minkowski() {
+				cube([inBoxW-(2*footWallD + 6), inBoxH-(2*footWallD + 6), inBoxD+1-wallD]);
+				sphere(r=3);
+			}
+
+		rotate([0, 0, 90])
+			{
+				translate([50, -30, outBoxD + wallD -1.7 -textDepth])
+					label(tx="robotranch", sz=14, font="Futura");
+				translate([50, -50, outBoxD + wallD -1.7 -textDepth])
+					label(tx=".org", sz=14, font="Futura");
+				translate([50, -10, outBoxD + wallD -1.7 -textDepth])
+					label(tx="2014", sz=14, font="Futura");
+				}
+	}
 }
 
 module box() {
@@ -125,6 +193,12 @@ module config1() {		// good for HogsFoot, Screaming Bird
 
 }
 
-translate([0, 0, 2])
-projection(cut = false)
-	config1();
+if (labelSlice == 1) {
+	translate([0, 0, 2])
+	projection(cut = false)
+		config1();
+}
+else {
+//	config1();
+	foot();
+}

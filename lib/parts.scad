@@ -10,9 +10,9 @@ module potentiometer(angle = 0) {
 	potShaftD = 15;
 	potBoard = 12;
 	potBoardD = 6.3;
-	potTabW = 2.8;
-	potTabH = 1.2;
-	potTabD = 2.5;
+	potTabW = 3.0;
+	potTabH = 1.7;
+	potTabD = 2.3;
 
 	rotate([0, 180, angle])
 	translate([0, 0, -potCylD/2])
