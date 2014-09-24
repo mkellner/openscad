@@ -10,8 +10,8 @@ module potentiometer(angle = 0) {
 	potShaftD = 15;
 	potBoard = 12;
 	potBoardD = 6.3;
-	potTabW = 3.0;
-	potTabH = 1.7;
+	potTabW = 3.3;
+	potTabH = 2.0;
 	potTabD = 2.3;
 
 	rotate([0, 180, angle])
@@ -23,7 +23,7 @@ module potentiometer(angle = 0) {
 			cylinder(r = potShaftR, h = potShaftD, center = true);
 		translate([0, -potCylR, potCylD/2 - potBoardD])
 			cube([potBoard, potCylR * 2, potBoardD]);
-		translate([-potTabW/2, -potCylR, potCylD / 2])
+		translate([-potTabW/2, -potCylR-0.5, potCylD / 2])
 			#cube([potTabW, potTabH, potTabD]);
 	}
 }
@@ -59,6 +59,22 @@ module swdp3t() {
     swShaftD = 8.5;
 
 	rotate([0, 180, 0])
+	union() {
+	    translate([-swBodyW/2, -swBodyH/2, -swBodyD])
+			#cube([swBodyW, swBodyH, swBodyD]);
+		translate([0, 0, swShaftD / 2]) //  swBodyD + swShaftD/2])
+			cylinder(r = swShaftR, h = swShaftD, center = true);
+	}
+}
+
+module swspst(angle = 0) {
+    swBodyW = 8;
+    swBodyH = 13;
+    swBodyD = 14.5;
+    swShaftR = (5.8 + slop) / 2;
+    swShaftD = 8.5;
+
+	rotate([0, 180, angle])
 	union() {
 	    translate([-swBodyW/2, -swBodyH/2, -swBodyD])
 			#cube([swBodyW, swBodyH, swBodyD]);

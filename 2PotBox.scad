@@ -38,10 +38,10 @@ translate([3, inBoxH - height, 13]) {
 }
 	difference() {
 		union() {
-		translate([wallD, inBoxH - height, 0])
-			cube([8.5, 8.5, 13]);
+		translate([wallD-3.5, inBoxH - height, 0])
+			cube([13.5, 8.5, 13]);
 		translate([wallD + 46.50, inBoxH - height, 0])
-			cube([8.5, 8.5, 13]);
+			cube([12.5, 8.5, 13]);
 		}
 		translate([wallD + 3.85, inBoxH - height + 3.85, 5])
 			#cylinder(r=1, h=16);
@@ -174,16 +174,16 @@ module config1() {		// good for HogsFoot, Screaming Bird
 
 		// back face
 		rotate([-90, 0, 180]) {
-			translate([-(outBoxW/2), -(outBoxD/3)+2, wallD-textDepth])
-				label(tx="Little", sz=7.5, font="Futura");
+			translate([-(outBoxW/2), -(outBoxD/3)+3, wallD-textDepth])
+				label(tx="Little", sz=8, font="Futura");
 			translate([-(outBoxW/2), -2*(outBoxD/3)+2, wallD-textDepth])
-				label(tx="Angel", sz=7.5, font="Futura");
+				label(tx="Angel", sz=8, font="Futura");
 		}
 
 		// front face
 		rotate([-90, 0, 0]) {
 			translate([(offsetDCX)-12, -offsetDCZ, (outBoxH + wallD) -textDepth])
-				label(tx="9v", sz=6, font="Futura");
+				label(tx="9v", sz=7, font="Futura");
 			translate([(offsetDCX)+12, -offsetDCZ, (outBoxH + wallD) -textDepth])
 				centerPos(size=4.8);
 //				label(tx="center", sz=3.5, font="Futura");
@@ -194,7 +194,7 @@ module config1() {		// good for HogsFoot, Screaming Bird
 		// right face
 		rotate([90, 180, 270]) {
 			translate([offsetJackOutY + 16, -offsetJackOutZ, wallD-textDepth])
-				label(tx="out", sz=9, font="Futura");
+				label(tx="out", sz=8, font="Futura");
 			translate([offsetJackOutY + 39, -offsetJackOutZ, wallD-textDepth])
 				arrow(width=20, height=10, depth=1);
 		}
@@ -202,7 +202,7 @@ module config1() {		// good for HogsFoot, Screaming Bird
 		// left face
 		rotate([90, 180, 90]) {
 			translate([-offsetJackInY -37, -offsetJackInZ, offsetJackInX+wallD-textDepth])
-				label(tx="in", sz=9, font="Futura", depth=2);
+				label(tx="in", sz=8, font="Futura", depth=2);
 			translate([-offsetJackInY -19, -offsetJackInZ-1, offsetJackInX+wallD-textDepth])
 				arrow(width=20, height=10, depth=2);
 		}
