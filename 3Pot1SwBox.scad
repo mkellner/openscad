@@ -4,9 +4,16 @@ $fn=25;
 use <lib/parts.scad>;
 use <lib/shapes.scad>;
 
-labelSlice = 0;
+doBox = 1;
+doFoot = 2;
+doLabelSlice = 3;
 
-textDepth = 3;
+
+perform = doLabelSlice;			// doBox, doFoot or doLabelSlice
+
+
+
+textDepth = perform == doFoot ? 3 : 0.7;
 
 wallD = 3;
 
@@ -18,7 +25,7 @@ outBoxW = inBoxW; // + wallD * 2;
 outBoxH = inBoxH; // + wallD * 2;
 outBoxD = inBoxD + wallD;
 
-footD = 4.7;
+footD = 4.2;
 footWallD = 3;
 
 quarterR = 26.5 / 2;
@@ -121,12 +128,11 @@ for (i = [-120 : 10 : 0 ]) {
 if (1) {
 		rotate([0, 0, 90])
 			{
-				translate([50, -30, outBoxD + wallD -textDepth])
-					#3
-~label(tx="robotranch", sz=14, font="Futura", depth=textDepth);
-				translate([50, -50, outBoxD + wallD -textDepth])
+				translate([50, -30, outBoxD + wallD -textDepth+.9])
+					label(tx="robotranch", sz=14, font="Futura", depth=textDepth);
+				translate([50, -50, outBoxD + wallD -textDepth+.9])
 					label(tx=".org", sz=14, font="Futura", depth=textDepth);
-				translate([50, -10, outBoxD + wallD -textDepth])
+				translate([50, -10, outBoxD + wallD -textDepth+.9])
 					label(tx="2014", sz=14, font="Futura", depth=textDepth);
 			}
 }
@@ -238,12 +244,12 @@ module config1() {		// good for HogsFoot, Screaming Bird
 
 }
 
-if (labelSlice == 1) {
+if (perform == doBox) {
+	config1();
+} else if (perform == doFoot) {
+	foot();
+} else if (perform == doLabelSlice) {
 	translate([0, 0, 2])
 	projection(cut = false)
 		config1();
-}
-else {
-//	config1();
-	foot();
 }

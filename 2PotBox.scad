@@ -4,7 +4,14 @@ $fn=25;
 use <lib/parts.scad>;
 use <lib/shapes.scad>;
 
-labelSlice = 0;
+doBox = 1;
+doFoot = 2;
+doLabelSlice = 3;
+
+
+perform = doLabelSlice;			// doBox, doFoot or doLabelSlice
+
+
 
 textDepth = .5;
 
@@ -50,7 +57,6 @@ translate([3, inBoxH - height, 13]) {
 	}
 }
 
-PCB(56, 51);
 
 module label(tx = "label", sz = 5, depth=1, font = "Courier", halign = "center", valign = "center") {
 	linear_extrude(height = depth)
@@ -211,12 +217,14 @@ module config1() {		// good for HogsFoot, Screaming Bird
 
 }
 
-if (labelSlice == 1) {
+
+if (perform == doBox) {
+	config1();
+	PCB(56, 51);
+} else if (perform == doFoot) {
+	foot();
+} else if (perform == doLabelSlice) {
 	translate([0, 0, 2])
 	projection(cut = false)
 		config1();
-}
-else {
-	config1();
-//	foot();
 }
