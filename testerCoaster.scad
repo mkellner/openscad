@@ -1,13 +1,13 @@
 
-nineVW = 53;
-nineVH = 17;
-nineVD = 8;
+nineVW = 53 + 1;
+nineVH = 17 + 1;
+nineVD = 10;
 
-wallD = 3;
+wallD = 2.3;
 
-innerW = 82;
-innerH = 57.5;
-innerD = 4;
+innerW = 82 + 1.3;
+innerH = 57.5 + 1.75;
+innerD = 6;
 
 outerW = innerW + 2*wallD;
 outerH = innerH + 2*wallD;
