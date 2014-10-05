@@ -126,3 +126,17 @@ module ledMount() {
 		}
 }
 
+module ledMountSm() {
+	ledMountR = (6.5 + slop) / 2;
+	ledMountD = 6.7;
+	ledMountBaseR = 7.9 / 2;
+	ledMountBaseH = 0.9;
+
+	rotate([0, 180, 0])
+		union() {
+		    cylinder(r = ledMountBaseR, h = ledMountBaseH);
+		    translate([0, 0, -ledMountD])
+			    cylinder(r = ledMountR, h = ledMountD);
+		}
+}
+
