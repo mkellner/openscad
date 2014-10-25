@@ -9,11 +9,11 @@ doFoot = 2;
 doLabelSlice = 3;
 
 
-perform = doBox;			// doBox, doFoot or doLabelSlice
+perform = doFoot;			// doBox, doFoot or doLabelSlice
 
+crossHatch = 0;
 
-
-textDepth = perform == doFoot ? 3 : 0.7;
+textDepth = (perform == doFoot) ? 2.5 : 0.7;		// 3 with crosshatch
 
 wallD = 3;
 
@@ -30,6 +30,7 @@ footWallD = 3;
 
 quarterR = 26.5 / 2;
 quarterH = 2;
+
 
 module quarter() {
 	cylinder(r=quarterR,h=quarterH+5,center=true);
@@ -109,21 +110,23 @@ module foot() {
 				sphere(r=3);
 			}
 
-for (i = [-60 : 10 : 60 ]) {
+if (crossHatch == 1) {
+	for (i = [-60 : 10 : 60 ]) {
 		translate([-i, -15, inBoxD+wallD+2.2])
 			rotate([0, 0, -30])
 				minkowski() {
 					cube([1, outBoxH*2, 1]);
 					sphere(r=1);
 				}
-}
-for (i = [-120 : 10 : 0 ]) {
+	}
+	for (i = [-120 : 10 : 0 ]) {
 		translate([-i, -5, inBoxD+wallD+2.2])
 			rotate([0, 0, 30])
 				minkowski() {
 					cube([1, outBoxH*2, 1]);
 					sphere(r=1);
 				}
+	}
 }
 if (1) {
 		rotate([0, 0, 90])
@@ -211,7 +214,7 @@ module config1() {		// good for HogsFoot, Screaming Bird
 
 		// back face
 		rotate([-90, 0, 180]) {
-			translate([-(outBoxW/2), -(outBoxD/2)+3, wallD-textDepth])
+			translate([-(outBoxW/2), -(outBoxD/3), wallD-textDepth])
 				label(tx="Dirty", sz=8, font="Futura");
 			translate([-(outBoxW/2), -2*(outBoxD/3)+2, wallD-textDepth])
 				label(tx="Sanchez", sz=8, font="Futura");

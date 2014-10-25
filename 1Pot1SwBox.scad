@@ -164,15 +164,17 @@ module config1() {		// good for HogsFoot, Screaming Bird
 	offsetStompX = 12;
 	offsetStompY = 15;
 	offsetLEDX = inBoxW - 12;
-	offsetLEDY = 15;
-	offsetPotX = inBoxW - 12;
-	offsetPotY = inBoxH - 12;
+	offsetLEDY = inBoxH - 15;
+//	offsetPotX = inBoxW - 12;
+//	offsetPotY = inBoxH - 12;
+	offsetPotX = inBoxW / 2;
+	offsetPotY = inBoxH - 40;
 	offsetPot2X = 12;
 	offsetPot2Y = inBoxH - 12;
 	offsetPot3X = inBoxW / 2;
 	offsetPot3Y = inBoxH - 33;
-	offsetSWX = inBoxW - 10;
-	offsetSWY = inBoxH - 43;
+	offsetSWX = 12;
+	offsetSWY = inBoxH - 15;
 	offsetDCX = inBoxH / 3;
 	offsetDCY = inBoxH-.1;
 	offsetDCZ = 6;
@@ -188,11 +190,11 @@ module config1() {		// good for HogsFoot, Screaming Bird
 		translate([offsetStompX, offsetStompY, 0])
 			#color([0,0,1]) sw3pdt();
 		translate([offsetLEDX, offsetLEDY, -wallD])
-			#ledMount();
+			#ledMountSm();
 		translate([offsetPotX, offsetPotY, 0])
-			#potentiometer(angle = 90);
-		translate([offsetPot2X, offsetPot2Y, 0])
-			#potentiometer(angle = 90);
+			#potentiometer(angle = 270);
+//		translate([offsetPot2X, offsetPot2Y, 0])
+//			#potentiometer(angle = 90);
 //		translate([offsetPot3X, offsetPot3Y, 0])
 //			#potentiometer(angle = 270);
 		translate([offsetSWX, offsetSWY, 0])
@@ -207,10 +209,10 @@ module config1() {		// good for HogsFoot, Screaming Bird
 
 		// back face
 		rotate([-90, 0, 180]) {
-			translate([-(outBoxW/2), -(outBoxD/3)+2, wallD-textDepth])
-				label(tx="Acceleron", sz=8, font="Futura");
-			translate([-(outBoxW/2), -2*(outBoxD/3)+3, wallD-textDepth])
-				label(tx="Fuzz", sz=8, font="Futura");
+			translate([-(outBoxW/2), -(outBoxD/3), wallD-textDepth])
+				label(tx="Headphone", sz=8, font="Futura");
+			translate([-(outBoxW/2), -2*(outBoxD/3)+1, wallD-textDepth])
+				label(tx="Amp", sz=8, font="Futura");
 		}
 
 		// front face
