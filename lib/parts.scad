@@ -12,7 +12,7 @@ module potentiometer(angle = 0) {
 	potBoardD = 6.3;
 	potTabW = 3.3;
 	potTabH = 2.0;
-	potTabD = 2.3;
+	potTabD = 2;
 
 	rotate([0, 180, angle])
 	translate([0, 0, -potCylD/2])
@@ -94,6 +94,35 @@ module socket(angle = 90) {
 			cylinder(r = sktR, h = sktD);
 			translate([0, 0, -sktBaseH])
 			cylinder(r = sktBaseR, h = sktBaseH);
+		}
+}
+
+module socketEnclosed(angle = 90) {
+	sktR = (8.67 + slop) / 2;
+	sktD = 5.8;
+//	sktBaseR = 20.40 / 2;
+	sktBaseR = 15.75;
+	sktBaseH = 26;
+
+	rotate([angle, 0, 90])
+		union() {
+			cylinder(r = sktR, h = sktD);
+			translate([-sktBaseR/2, -sktBaseR/2, -sktBaseH])
+				cube([sktBaseR, sktBaseR, sktBaseH]);
+		}
+}
+
+module DcJack() {
+	dcJackR = (11.75 + slop) / 2;
+	dcJackD = 8;
+	dcJackBaseR = 15.50 / 2;
+	dcJackBaseH = 11;
+
+	rotate([-90, 0, 0])
+		union() {
+		    cylinder(r = dcJackR, h = dcJackD);
+		    translate([0, 0, -dcJackBaseH])
+		    cylinder(r = dcJackBaseR, h = dcJackBaseH);
 		}
 }
 

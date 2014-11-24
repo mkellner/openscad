@@ -15,7 +15,7 @@ perform = doBox;			// doBox, doFoot or doLabelSlice
 
 textDepth = perform == doFoot ? 3 : 0.7;
 
-wallD = 2.5;
+wallD = 2.5;			// !!!! SMALLER WALL DEPTH ATTEMPT
 
 inBoxW = 62;			// Altoids 58.5
 inBoxH = 98;			// Altoids 93.5
