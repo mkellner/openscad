@@ -9,11 +9,11 @@ doFoot = 2;
 doLabelSlice = 3;
 
 
-perform = doLabelSlice;			// doBox, doFoot or doLabelSlice
+perform = doBox;			// doBox, doFoot or doLabelSlice
 
-crossHatch = 0;
 
-textDepth = (perform == doFoot) ? 2.5 : 0.7;		// 3 with crosshatch
+
+textDepth = .5;
 
 wallD = 3;
 
@@ -25,12 +25,11 @@ outBoxW = inBoxW; // + wallD * 2;
 outBoxH = inBoxH; // + wallD * 2;
 outBoxD = inBoxD + wallD;
 
-footD = 4.2;
+footD = 4;
 footWallD = 3;
 
 quarterR = 26.5 / 2;
 quarterH = 2;
-
 
 module quarter() {
 	cylinder(r=quarterR,h=quarterH+5,center=true);
@@ -57,7 +56,6 @@ translate([3, inBoxH - height, 13]) {
 			#cylinder(r=1, h=16);
 	}
 }
-//PCB(56, 51);
 
 
 module label(tx = "label", sz = 5, depth=1, font = "Courier", halign = "center", valign = "center") {
@@ -102,7 +100,7 @@ module foot() {
 		//config1();
 		box();
 		translate([outBoxW/2, -11, inBoxD+2.5-wallD])
-			quarter();
+			#quarter();
 
 		translate([wallD+footWallD, wallD+footWallD, wallD-3])
 			minkowski() {
@@ -110,35 +108,15 @@ module foot() {
 				sphere(r=3);
 			}
 
-if (crossHatch == 1) {
-	for (i = [-60 : 10 : 60 ]) {
-		translate([-i, -15, inBoxD+wallD+2.2])
-			rotate([0, 0, -30])
-				minkowski() {
-					cube([1, outBoxH*2, 1]);
-					sphere(r=1);
-				}
-	}
-	for (i = [-120 : 10 : 0 ]) {
-		translate([-i, -5, inBoxD+wallD+2.2])
-			rotate([0, 0, 30])
-				minkowski() {
-					cube([1, outBoxH*2, 1]);
-					sphere(r=1);
-				}
-	}
-}
-if (1) {
 		rotate([0, 0, 90])
 			{
-				translate([50, -30, outBoxD + wallD -textDepth+.9])
-					label(tx="robotranch", sz=14, font="Futura", depth=textDepth);
-				translate([50, -50, outBoxD + wallD -textDepth+.9])
-					label(tx=".org", sz=14, font="Futura", depth=textDepth);
-				translate([50, -10, outBoxD + wallD -textDepth+.9])
-					label(tx="2014", sz=14, font="Futura", depth=textDepth);
-			}
-}
+				translate([50, -30, outBoxD + wallD -1.7 -textDepth])
+					label(tx="robotranch", sz=14, font="Futura");
+				translate([50, -50, outBoxD + wallD -1.7 -textDepth])
+					label(tx=".org", sz=14, font="Futura");
+				translate([50, -10, outBoxD + wallD -1.7 -textDepth])
+					label(tx="2014", sz=14, font="Futura");
+				}
 	}
 }
 
@@ -172,12 +150,6 @@ module config1() {		// good for HogsFoot, Screaming Bird
 	offsetPotY = inBoxH - 12;
 	offsetPot2X = 12;
 	offsetPot2Y = inBoxH - 12;
-	offsetPot3X = inBoxW - 20;
-	offsetPot3Y = inBoxH - 40;
-	offsetPot4X = 20;
-	offsetPot4Y = inBoxH - 40;
-	offsetSWX = inBoxW - 8;
-	offsetSWY = inBoxH - 43;
 	offsetDCX = inBoxH / 3;
 	offsetDCY = inBoxH-.1;
 	offsetDCZ = 6;
@@ -193,17 +165,11 @@ module config1() {		// good for HogsFoot, Screaming Bird
 		translate([offsetStompX, offsetStompY, 0])
 			#color([0,0,1]) sw3pdt();
 		translate([offsetLEDX, offsetLEDY, -wallD])
-			#ledMountSm();
+			#ledMount();
 		translate([offsetPotX, offsetPotY, 0])
 			#potentiometer(angle = 90);
 		translate([offsetPot2X, offsetPot2Y, 0])
 			#potentiometer(angle = 90);
-		translate([offsetPot3X, offsetPot3Y, 0])
-			#potentiometer(angle = 270);
-		translate([offsetPot4X, offsetPot4Y, 0])
-			#potentiometer(angle = 270);
-//		translate([offsetSWX, offsetSWY, 0])
-//			#swdp3t();
 		translate([offsetDCX, offsetDCY, offsetDCZ])
 			#smDcJack();
 		translate([offsetJackInX, offsetJackInY, offsetJackInZ])
@@ -214,10 +180,10 @@ module config1() {		// good for HogsFoot, Screaming Bird
 
 		// back face
 		rotate([-90, 0, 180]) {
-			translate([-(outBoxW/2), -(outBoxD/3), wallD-textDepth])
-				label(tx="Dirty", sz=8, font="Futura");
-			translate([-(outBoxW/2), -2*(outBoxD/3)+2, wallD-textDepth])
-				label(tx="Sanchez", sz=8, font="Futura");
+			translate([-(outBoxW/2), -(outBoxD/2)+5, wallD-textDepth])
+				label(tx="Blue Box", sz=8, font="Futura");
+//			translate([-(outBoxW/2), -2*(outBoxD/3)+2, wallD-textDepth])
+//				label(tx="Angel", sz=8, font="Futura");
 		}
 
 		// front face
@@ -251,8 +217,10 @@ module config1() {		// good for HogsFoot, Screaming Bird
 
 }
 
+
 if (perform == doBox) {
 	config1();
+//	PCB(56, 51);
 } else if (perform == doFoot) {
 	foot();
 } else if (perform == doLabelSlice) {

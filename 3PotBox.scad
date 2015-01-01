@@ -13,9 +13,9 @@ perform = doBox;			// doBox, doFoot or doLabelSlice
 
 
 
-textDepth = perform == doFoot ? 3 : 0.7;
+textDepth = 3.5;
 
-wallD = 2.5;			// !!!! SMALLER WALL DEPTH ATTEMPT
+wallD = 3;			// 2.5 == !!!! SMALLER WALL DEPTH ATTEMPT
 
 inBoxW = 62;			// Altoids 58.5
 inBoxH = 98;			// Altoids 93.5
@@ -25,7 +25,7 @@ outBoxW = inBoxW; // + wallD * 2;
 outBoxH = inBoxH; // + wallD * 2;
 outBoxD = inBoxD + wallD;
 
-footD = 4.2;
+footD = 4;
 footWallD = 3;
 
 quarterR = 26.5 / 2;
@@ -100,15 +100,16 @@ module foot() {
 
 		//config1();
 		box();
-		translate([outBoxW/2, -11, inBoxD+2.5-wallD])
-			quarter();
+		translate([outBoxW/2, -11.5, inBoxD+2-wallD])
+			#quarter();
 
-		translate([wallD+footWallD, wallD+footWallD, wallD-3])
+		translate([wallD+footWallD+.5, wallD+footWallD+.5, wallD-3])
 			minkowski() {
 				cube([inBoxW-(2*footWallD + 6), inBoxH-(2*footWallD + 6), inBoxD+1-wallD]);
 				sphere(r=3);
 			}
 
+if (0) {
 for (i = [-60 : 10 : 60 ]) {
 		translate([-i, -15, inBoxD+wallD+2.2])
 			rotate([0, 0, -30])
@@ -125,14 +126,15 @@ for (i = [-120 : 10 : 0 ]) {
 					sphere(r=1);
 				}
 }
+}
 if (1) {
 		rotate([0, 0, 90])
 			{
-				translate([50, -30, outBoxD + wallD -textDepth+.9])
-					label(tx="robotranch", sz=14, font="Futura", depth=textDepth);
-				translate([50, -50, outBoxD + wallD -textDepth+.9])
-					label(tx=".org", sz=14, font="Futura", depth=textDepth);
-				translate([50, -10, outBoxD + wallD -textDepth+.9])
+				translate([50, -30, outBoxD + wallD +1.5 -textDepth])
+					#label(tx="robotranch", sz=14, font="Futura", depth=textDepth);
+				translate([50, -50, outBoxD + wallD +1.5 -textDepth])
+					#label(tx=".org", sz=14, font="Futura", depth=textDepth);
+				translate([50, -10, outBoxD + wallD +1.5 -textDepth])
 					label(tx="2014", sz=14, font="Futura", depth=textDepth);
 			}
 }
@@ -207,17 +209,17 @@ module config1() {		// good for HogsFoot, Screaming Bird
 
 		// back face
 		rotate([-90, 0, 180]) {
-			translate([-(outBoxW/2), -(outBoxD/3)+3, wallD-textDepth])
-				label(tx="Tone God", sz=8, font="Futura");
-			translate([-(outBoxW/2), -2*(outBoxD/3)+2, wallD-textDepth])
-				label(tx="Finish Line", sz=8, font="Futura");
+			translate([-(outBoxW/2), -(outBoxD/3)+3, wallD-1])
+				#label(tx="Deep Blue", sz=8, font="Futura");
+			translate([-(outBoxW/2), -2*(outBoxD/3)+2, wallD-1])
+				label(tx="Delay", sz=8, font="Futura");
 		}
 
 		// front face
 		rotate([-90, 0, 0]) {
-			translate([(offsetDCX)-15, -offsetDCZ, (outBoxH + wallD) -textDepth])
+			translate([(offsetDCX)-15, -offsetDCZ, (outBoxH + wallD) -1])
 				label(tx="9v", sz=7, font="Futura");
-			translate([(offsetDCX)+15, -offsetDCZ, (outBoxH + wallD) -textDepth])
+			translate([(offsetDCX)+15, -offsetDCZ, (outBoxH + wallD) -1])
 				centerPos(size=4.8);
 //				label(tx="center", sz=3.5, font="Futura");
 //			translate([(offsetDCX)+7, -19.5, (outBoxH + wallD) -1])
@@ -226,17 +228,17 @@ module config1() {		// good for HogsFoot, Screaming Bird
 
 		// right face
 		rotate([90, 180, 270]) {
-			translate([offsetJackOutY + 16, -offsetJackOutZ, wallD-textDepth])
+			translate([offsetJackOutY + 16, -offsetJackOutZ, wallD-1])
 				label(tx="out", sz=8, font="Futura");
-			translate([offsetJackOutY + 39, -offsetJackOutZ, wallD-textDepth])
+			translate([offsetJackOutY + 39, -offsetJackOutZ, wallD-1])
 				arrow(width=20, height=10, depth=1);
 		}
 
 		// left face
 		rotate([90, 180, 90]) {
-			translate([-offsetJackInY -37, -offsetJackInZ, offsetJackInX+wallD-textDepth])
+			translate([-offsetJackInY -37, -offsetJackInZ, offsetJackInX+wallD-1])
 				label(tx="in", sz=8, font="Futura", depth=2);
-			translate([-offsetJackInY -19, -offsetJackInZ-1, offsetJackInX+wallD-textDepth])
+			translate([-offsetJackInY -19, -offsetJackInZ-1, offsetJackInX+wallD-1])
 				arrow(width=20, height=10, depth=2);
 		}
 

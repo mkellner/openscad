@@ -9,41 +9,44 @@ doFoot = 2;
 doLabelSlice = 3;
 
 
-perform = doLabelSlice;			// doBox, doFoot or doLabelSlice
+perform = doFoot;			// doBox, doFoot or doLabelSlice
 
-crossHatch = 0;
 
-textDepth = (perform == doFoot) ? 2.5 : 0.7;		// 3 with crosshatch
+showPCB = 0;
+bottomText = 1;
+
+
+textDepth = perform == doFoot ? 3 : 0.7;
 
 wallD = 3;
 
-inBoxW = 62;			// Altoids 58.5
-inBoxH = 98;			// Altoids 93.5
-inBoxD = 29.5;			// Altoids 21.5
+inBoxW = 80;			// Altoids 58.5
+inBoxH = 101;			// Altoids 93.5
+inBoxD = 31.5;			// Altoids 21.5
 
 outBoxW = inBoxW; // + wallD * 2;
 outBoxH = inBoxH; // + wallD * 2;
 outBoxD = inBoxD + wallD;
 
-footD = 4.2;
+footD = 3.6;
 footWallD = 3;
 
 quarterR = 26.5 / 2;
 quarterH = 2;
-
 
 module quarter() {
 	cylinder(r=quarterR,h=quarterH+5,center=true);
 }
 
 module PCB(width, height, pcbZ=1, componentZ=16, traceZ = 3) {
-translate([3, inBoxH - height, 13]) {
-//	cube([width, height, pcbZ]);
-//	translate([5, 5, pcbZ])
-//		cube([width - 10, height - 10, componentZ]);
-//	translate([5, 5, -traceZ])
-//		cube([width - 10, height - 10, traceZ]);
+translate([3, inBoxH - height -1, 13]) {
+	cube([width, height, pcbZ]);
+	translate([5, 5, pcbZ])
+		cube([width - 10, height - 10, componentZ]);
+	translate([5, 5, -traceZ])
+		cube([width - 10, height - 10, traceZ]);
 }
+if (0) {
 	difference() {
 		union() {
 		translate([wallD-3.5, inBoxH - height, 0])
@@ -57,7 +60,10 @@ translate([3, inBoxH - height, 13]) {
 			#cylinder(r=1, h=16);
 	}
 }
-//PCB(56, 51);
+}
+
+if (showPCB)
+	PCB(75, 47, pcbZ=1.65, componentZ=17, traceZ=2);
 
 
 module label(tx = "label", sz = 5, depth=1, font = "Courier", halign = "center", valign = "center") {
@@ -104,38 +110,39 @@ module foot() {
 		translate([outBoxW/2, -11, inBoxD+2.5-wallD])
 			quarter();
 
-		translate([wallD+footWallD, wallD+footWallD, wallD-3])
+		translate([wallD+footWallD, wallD+footWallD, wallD-1])
 			minkowski() {
 				cube([inBoxW-(2*footWallD + 6), inBoxH-(2*footWallD + 6), inBoxD+1-wallD]);
 				sphere(r=3);
 			}
 
-if (crossHatch == 1) {
-	for (i = [-60 : 10 : 60 ]) {
+if (0) { // crosshatch bottom
+for (i = [-60 : 10 : 60 ]) {
 		translate([-i, -15, inBoxD+wallD+2.2])
 			rotate([0, 0, -30])
 				minkowski() {
 					cube([1, outBoxH*2, 1]);
 					sphere(r=1);
 				}
-	}
-	for (i = [-120 : 10 : 0 ]) {
+}
+for (i = [-120 : 10 : 0 ]) {
 		translate([-i, -5, inBoxD+wallD+2.2])
 			rotate([0, 0, 30])
 				minkowski() {
 					cube([1, outBoxH*2, 1]);
 					sphere(r=1);
 				}
-	}
 }
-if (1) {
+}
+
+if (bottomText) {
 		rotate([0, 0, 90])
 			{
-				translate([50, -30, outBoxD + wallD -textDepth+.9])
+				translate([50, -40, outBoxD + wallD -textDepth+.9])
 					label(tx="robotranch", sz=14, font="Futura", depth=textDepth);
-				translate([50, -50, outBoxD + wallD -textDepth+.9])
+				translate([50, -57, outBoxD + wallD -textDepth+.9])
 					label(tx=".org", sz=14, font="Futura", depth=textDepth);
-				translate([50, -10, outBoxD + wallD -textDepth+.9])
+				translate([50, -25, outBoxD + wallD -textDepth+.9])
 					label(tx="2014", sz=14, font="Futura", depth=textDepth);
 			}
 }
@@ -166,44 +173,44 @@ module box() {
 module config1() {		// good for HogsFoot, Screaming Bird
 	offsetStompX = 12;
 	offsetStompY = 15;
-	offsetLEDX = inBoxW - 12;
+	offsetStompX2 = inBoxW - 12;
+	offsetStompY2 = 15;
+	offsetLEDX = offsetStompX2;
 	offsetLEDY = 15;
-	offsetPotX = inBoxW - 12;
-	offsetPotY = inBoxH - 12;
-	offsetPot2X = 12;
-	offsetPot2Y = inBoxH - 12;
-	offsetPot3X = inBoxW - 20;
-	offsetPot3Y = inBoxH - 40;
-	offsetPot4X = 20;
-	offsetPot4Y = inBoxH - 40;
-	offsetSWX = inBoxW - 8;
-	offsetSWY = inBoxH - 43;
-	offsetDCX = inBoxH / 3;
+	offsetPotX = inBoxW - 15;
+	offsetPotY = inBoxH - 16;
+	offsetPot2X = 15;
+	offsetPot2Y = inBoxH - 16;
+	offsetPot3X = inBoxW / 2;
+	offsetPot3Y = inBoxH - 28;
+	offsetSWX = inBoxW / 2 +10;
+	offsetSWY = 42;
+	offsetDCX = inBoxW / 2;
 	offsetDCY = inBoxH-.1;
 	offsetDCZ = 6;
 	offsetJackInX = inBoxW-.1;
 	offsetJackInY = 37;
-	offsetJackInZ = 10.5;
+	offsetJackInZ = 11.5;
 	offsetJackOutX = .1;
 	offsetJackOutY = 37;
-	offsetJackOutZ = 10.5;
+	offsetJackOutZ = 11.5;
 
 	difference() {
 		box();
 		translate([offsetStompX, offsetStompY, 0])
 			#color([0,0,1]) sw3pdt();
+//		translate([offsetStompX2, offsetStompY2, 0])
+//			#color([0,0,1]) sw3pdt();
 		translate([offsetLEDX, offsetLEDY, -wallD])
-			#ledMountSm();
+			#ledMount();
 		translate([offsetPotX, offsetPotY, 0])
 			#potentiometer(angle = 90);
 		translate([offsetPot2X, offsetPot2Y, 0])
 			#potentiometer(angle = 90);
 		translate([offsetPot3X, offsetPot3Y, 0])
-			#potentiometer(angle = 270);
-		translate([offsetPot4X, offsetPot4Y, 0])
-			#potentiometer(angle = 270);
+			#potentiometer(angle = 90);
 //		translate([offsetSWX, offsetSWY, 0])
-//			#swdp3t();
+//			#swspst();
 		translate([offsetDCX, offsetDCY, offsetDCZ])
 			#smDcJack();
 		translate([offsetJackInX, offsetJackInY, offsetJackInZ])
@@ -214,10 +221,10 @@ module config1() {		// good for HogsFoot, Screaming Bird
 
 		// back face
 		rotate([-90, 0, 180]) {
-			translate([-(outBoxW/2), -(outBoxD/3), wallD-textDepth])
-				label(tx="Dirty", sz=8, font="Futura");
+			translate([-(outBoxW/2), -(outBoxD/2)+8, wallD-textDepth])
+				label(tx="Mutron", sz=8, font="Futura");
 			translate([-(outBoxW/2), -2*(outBoxD/3)+2, wallD-textDepth])
-				label(tx="Sanchez", sz=8, font="Futura");
+				label(tx="Phasor][", sz=8, font="Futura");
 		}
 
 		// front face
@@ -256,7 +263,7 @@ if (perform == doBox) {
 } else if (perform == doFoot) {
 	foot();
 } else if (perform == doLabelSlice) {
-	translate([0, 0, 2])
+	translate([0, 0, 1])
 	projection(cut = false)
 		config1();
 }
