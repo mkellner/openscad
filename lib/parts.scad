@@ -1,6 +1,48 @@
 // @2014 - mkellner@robotranch.org
+//module potentiometer(angle = 0);
+//module sw3pdt();
+//module swdp3t();
+//module swspst(angle = 0);
+//module socket(angle = 90);
+//module socketEnclosed(angle = 90);
+//module DcJack();
+//module smDcJack();
+//module ledMount();
+//module ledMountSm();
 
 slop = 0.4;
+
+module rotarySwitch(angle = 0) {
+	outerCylR = (26 + slop) / 2;
+	outerCylD = 12;
+	outerRectW = 31;
+	outerRectH = 10;
+	connectorsR = 20 / 2;
+	connectorsD = 6.8;
+	shaftR = (8.76 + slop) / 2;
+	shaftD = 15;
+
+	tabW = 3.3;
+	tabH = 2.0;
+	tabD = 2;
+
+	rotate([0, 180, angle])
+	translate([0, 0, -outerCylD/2])
+
+	union() {
+		cylinder(r = outerCylR, h = outerCylD, center = true);
+		translate([0, 0, outerCylD])
+			cylinder(r = shaftR, h = shaftD, center = true);
+		translate([0, 0, 0])
+			cube([outerRectH, outerRectW, outerCylD], center = true);
+		rotate([0, 0, 90])
+			translate([-tabW/2, -outerCylR-0.5+tabD, outerCylD / 2])
+				#cube([tabW, tabH, tabD]);
+
+		translate([0, 0, -outerCylD + connectorsD / 2])
+			cylinder(r = connectorsR, h = connectorsD, center = true);
+	}
+}
 
 module potentiometer(angle = 0) {
 
@@ -112,13 +154,13 @@ module socketEnclosed(angle = 90) {
 		}
 }
 
-module DcJack() {
+module DcJack(angle = -90) {
 	dcJackR = (11.75 + slop) / 2;
 	dcJackD = 8;
 	dcJackBaseR = 15.50 / 2;
 	dcJackBaseH = 11;
 
-	rotate([-90, 0, 0])
+	rotate([angle, 0, 0])
 		union() {
 		    cylinder(r = dcJackR, h = dcJackD);
 		    translate([0, 0, -dcJackBaseH])
@@ -167,5 +209,32 @@ module ledMountSm() {
 		    translate([0, 0, -ledMountD])
 			    cylinder(r = ledMountR, h = ledMountD);
 		}
+}
+
+module 9vBattery() {
+	9vW = 26.1;
+	9vH = 43.9;
+	9vD = 16.9;
+	neg = 8.2 / 2;
+	pos = 5.7 / 2;
+	termD = 3.4;
+	termOffset = 6.5;
+	capD = 4;
+	
+
+	cube([9vW, 9vH, 9vD]);
+	translate([termOffset, 0, 9vD / 2])
+		rotate([90, 90, 0])
+			#cylinder(r = neg, h = termD);
+	translate([9vW - termOffset, 0, 9vD / 2])
+		rotate([90, 90, 0])
+			#cylinder(r = pos, h = termD);
+    translate([3, -termD, 3])
+        rotate([90, 0, 0])
+			minkowski() {
+	            cube([9vW-6, 9vD-6, capD]);
+				cylinder(r=3);
+			}
+
 }
 
