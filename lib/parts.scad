@@ -22,8 +22,8 @@ module rotarySwitch(angle = 0) {
 	shaftR = (8.76 + slop) / 2;
 	shaftD = 15;
 
-	tabW = 3.3;
-	tabH = 2.0;
+	tabW = 3.4;
+	tabH = 2.6;
 	tabD = 2;
 
 	rotate([0, 180, angle])
@@ -36,7 +36,7 @@ module rotarySwitch(angle = 0) {
 		translate([0, 0, 0])
 			cube([outerRectH, outerRectW, outerCylD], center = true);
 		rotate([0, 0, 90])
-			translate([-tabW/2, -outerCylR-0.5+tabD, outerCylD / 2])
+			translate([-tabW/2, -outerCylR-2+tabH/2, outerCylD / 2])
 				#cube([tabW, tabH, tabD]);
 
 		translate([0, 0, -outerCylD + connectorsD / 2])
@@ -93,19 +93,25 @@ module sw3pdt() {
 		}
 }
 
-module swdp3t() {
+module swdp3t(angle = 0) {
     swBodyW = 12.62;
     swBodyH = 13;
     swBodyD = 14.5;
     swShaftR = (5.8 + slop) / 2;
     swShaftD = 8.5;
 
-	rotate([0, 180, 0])
+	tabW = 2.5 + 0.25;
+	tabH = 0.75 + 1.25;
+	tabD = 2;
+
+	rotate([0, 180, angle])
 	union() {
 	    translate([-swBodyW/2, -swBodyH/2, -swBodyD])
 			#cube([swBodyW, swBodyH, swBodyD]);
 		translate([0, 0, swShaftD / 2]) //  swBodyD + swShaftD/2])
 			cylinder(r = swShaftR, h = swShaftD, center = true);
+		translate([-tabW/2, -6 - tabH/2, 0])
+			#cube([tabW, tabH, tabD]);
 	}
 }
 
@@ -116,12 +122,18 @@ module swspst(angle = 0) {
     swShaftR = (5.8 + slop) / 2;
     swShaftD = 8.5;
 
+	tabW = 2.5 + 0.25;
+	tabH = 0.75 + 1.25;
+	tabD = 2;
+
 	rotate([0, 180, angle])
 	union() {
 	    translate([-swBodyW/2, -swBodyH/2, -swBodyD])
 			#cube([swBodyW, swBodyH, swBodyD]);
 		translate([0, 0, swShaftD / 2]) //  swBodyD + swShaftD/2])
 			cylinder(r = swShaftR, h = swShaftD, center = true);
+		translate([-tabW/2, -6 - tabH/2, 0])
+			#cube([tabW, tabH, tabD]);
 	}
 }
 

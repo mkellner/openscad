@@ -205,11 +205,11 @@ module config1() {
 	difference() {
 		box();
 		translate([offsetOnX, offsetOnY, 0])
-			#swspst();
+			#swspst(180);
 		translate([offsetLEDX, offsetLEDY, -wallD])
 			#ledMount();
 		translate([offsetSWX, offsetSWY, 0])
-			#swdp3t();
+			#swdp3t(180);
 		translate([offsetPotX, offsetPotY, 0])
 			#rotarySwitch(angle = 90);
 		translate([offsetPot2X, offsetPot2Y, 0])
@@ -232,9 +232,17 @@ module config1() {
 			rotate([90, 90, 0])
 				#9vBattery();
 
+		// top face
+*		rotate([180, 0, 180]) {
+			#translate([-(outBoxW/2), 19, wallD-textDepth])
+				label(tx="Function", sz=8, font="Futura");
+			translate([-(outBoxW/2), 9, wallD-textDepth])
+				label(tx="Generator", sz=8, font="Futura");
+		}
+
 		// back face
 		rotate([-90, 0, 180]) {
-			translate([-(outBoxW/2), -(outBoxD/3), wallD-textDepth])
+			#translate([-(outBoxW/2), -(outBoxD/3)+2.8, wallD-textDepth])
 				label(tx="Function", sz=8, font="Futura");
 			translate([-(outBoxW/2), -2*(outBoxD/3)+2, wallD-textDepth])
 				label(tx="Generator", sz=8, font="Futura");
@@ -252,7 +260,7 @@ module config1() {
 		}
 
 		// right face
-		rotate([90, 180, 270]) {
+*		rotate([90, 180, 270]) {
 			translate([offsetJackOutY + 16, -offsetJackOutZ, wallD-textDepth])
 				label(tx="out", sz=8, font="Futura");
 *			translate([offsetJackOutY + 39, -offsetJackOutZ, wallD-textDepth])
@@ -269,17 +277,21 @@ module config1() {
 
 	}
 
-	translate([-wallD, 20, 0])
+	translate([-wallD, 19, 0])
 		rotate([0, 0, 0])
-			cube([outBoxW + 2*wallD, 3, outBoxD/2]);
+			cube([outBoxW + 2*wallD, 4, outBoxD/2]);
 }
 
-if (perform == doBox) {
-	config1();
-} else if (perform == doFoot) {
-	foot();
-} else if (perform == doLabelSlice) {
-	translate([0, 0, 2])
-	projection(cut = false)
+if (0) {
+	swspst();
+} else {
+	if (perform == doBox) {
 		config1();
+	} else if (perform == doFoot) {
+		foot();
+	} else if (perform == doLabelSlice) {
+		translate([0, 0, 2])
+		projection(cut = false)
+			config1();
+	}
 }
