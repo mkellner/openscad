@@ -2,8 +2,17 @@ $fn = 10;
 
 skinBreak = 0.01;       // extra depth to poke a hole through a surface
 
-boardW = 146;
-boardH = 63.7;     // was 63.45 - tight
+//boardW = 146;
+//boardH = 63.7;     // was 63.45 - tight
+
+// Eagle dimensions of v.3 board
+//  + slop to fit
+eagleBoardW = 144.78;
+eagleBoardH = 62.74;
+eagleBoardX = .5;       // offset into board hole (1/2 of fudge value)
+eagleBoardY = .5;
+boardW = eagleBoardW + (eagleBoardX*2);
+boardH = eagleBoardH + (eagleBoardY*2);
 boardD = 1.8 + skinBreak;
 
 boardX = 0;
@@ -101,16 +110,16 @@ module pinClearance() {
         translate([headerBOffset, boardH-headerHeight, -boardD])
             cube([headerBWidth, headerHeight, headerDepth]);
 
-switchAOffset = -1;
+switchAOffset = 0;
 switchBOffset = 138;
 switchYOffset = 5.7;
-switchWidth = 8;
+switchWidth = 7.3;
 switchHeight = 10;
 switchPinDepth = boardD + headerBackDepth;
     // reset and boot switches
         translate([switchAOffset, boardH-switchHeight-switchYOffset, switchPinDepth-boardD - headerBackDepth])
             cube([switchWidth, switchHeight, switchPinDepth]);
-        translate([switchBOffset, boardH-switchHeight-switchYOffset, switchPinDepth-boardD - headerBackDepth])
+        #translate([switchBOffset, boardH-switchHeight-switchYOffset, switchPinDepth-boardD - headerBackDepth])
             cube([switchWidth, switchHeight, switchPinDepth]);
 
 powerW = 12;
@@ -133,12 +142,12 @@ npZ = -1;
     translate([npX, boardH-npH+npY, npZ])
         cube([npW, npH, npD]);
 
-holeX1 = 2.54;
-holeX2 = boardW - 2.54;
-holeY1 = 2.54;
-holeY2 = boardH - 2.54;
+holeX1 = eagleBoardX + 2.54;
+holeX2 = eagleBoardX + eagleBoardW - 2.54;
+holeY1 = eagleBoardY + 2.54;
+holeY2 = eagleBoardY + eagleBoardH - 2.54;
 holeZ = 0;
-holeR = 3/2;
+holeR = 2.9/2;
 holeD = 10;
     // mounting holes
     translate([holeX1, holeY1, holeZ])
@@ -163,7 +172,7 @@ difference() {
         rotate([0, 0, 180])
     union() {
         // pcb
-        translate([boardX, boardY, -boardD+skinBreak])
+       translate([boardX, boardY, -boardD+skinBreak])
             cube([boardW, boardH, boardD]);
         
         // header pins
@@ -171,7 +180,8 @@ difference() {
             pinClearance();
 
         // seven segments (* 4) + colon
-        translate([boardX - 1, boardY + 2, 0]) {
+        // was [boardX -1, boardY + 2, 0]
+        translate([boardX - 1, boardY + 3, 0]) {
             scale([segMul, segMul, 1])
                 union() {
         

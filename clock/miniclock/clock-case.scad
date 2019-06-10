@@ -44,8 +44,10 @@ caseZ = -boardH/2 - caseMinkowskiR;
 
 caseBackLip = 3;
 
-glassW = 148.26 + fudge;
-glassH = 65.8 + fudge;
+//glassW = 148.26 + fudge;
+//glassH = 65.8 + fudge;
+glassW = 153 + fudge;
+glassH = 76 + fudge;
 glassD = acrylicDepth;
 glassX = (reflectorW - glassW) / 2;
 glassY = 0;
