@@ -10,8 +10,8 @@ skinBreak = 0.01;       // extra depth to poke a hole through a surface
 eagleBoardW = (33 * 2.54);      // 83.82;
 eagleBoardH = (15.55 * 2.54); // 39.37;
 eagleBoardD = 2.8; // 1.8;
-eagleBoardX = .5;       // offset into board hole (1/2 of fudge value)
-eagleBoardY = .5;
+eagleBoardX = 1;       // offset into board hole (1/2 of fudge value)
+eagleBoardY = .75;
 eagleBoardZ = 0;
 boardW = eagleBoardW + (eagleBoardX*2);
 boardH = eagleBoardH + (eagleBoardY*2);
@@ -95,29 +95,29 @@ npZ = -1;
 segMul = .254 * 2.54;
 
 adgOffX = 8;
-adgOffY = 3;
+adgOffY = 2;
 aOffX = 4;
-aOffY = 34.5;
-dOffY = -.5;
-gOffY = 17;
+aOffY = 33.5;
+dOffY = -1.5;
+gOffY = 16;
 adgSeg = [ [-9.5,-1.5], [-9.5,1.5], [-6.5,4.5], [6,4.5], [9.5,1], [9.5,-1], [6.5,-4.5], [-6.5,-4.5] ];
 
 bcOffX = 20.5;
-bcOffY = 8.5;
-bOffY = 20;
-cOffY = 2.5;
-bcSeg = [ [-4,-5], [-4,5.5], [0,10], [0,11], [2,11], [4,8.5], [4,-9], [2.5,-10.5], [0,-10.5], [0,-9] ];
+bcOffY = 7.5;
+bOffY = 19;
+cOffY = 1.5;
+bcSeg = [ [-4,-5], [-4,5.5], [0,9.5], [0,10.5], [2,10.5], [4,8.5], [4,-9], [2.5,-10.5], [0,-10.5], [0,-9] ];
 
 efOffX = 3;
-efOffY = 8.5;
-eOffY = 2.5;
-fOffY = 20;
+efOffY = 7.5;
+eOffY = 1.5;
+fOffY = 19;
 efSeg = [ [.5,-10.5], [-2,-10.5], [-4,-8.5], [-4,8.5], [-2,10.5],  [.5,10.5],  [.5,9.5],  [4,6],  [4,-5.5],  [.5,-9] ];
 
 colonCenterX = 3;
 colonCenterY = 3;
-colonOffY = 10.75;
-colonOffY2 = 22.75;
+colonOffY = 9.75;
+colonOffY2 = 21.75;
 colonSeg = [ [-3.5,-2.5], [-3.5,2.5],  [-2.5,3.5],  [2.5,3.5],  [3.5,2.5],  [3.5,-2.5],  [2.5,-3.5],  [-2.5,-3.5] ];
 
 module segment(path) {
