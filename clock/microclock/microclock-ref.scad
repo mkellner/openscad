@@ -7,8 +7,8 @@ skinBreak = 0.01;       // extra depth to poke a hole through a surface
 
 // Eagle dimensions of v.2 board
 //  + slop to fit
-eagleBoardW = (33 * 2.54);      // 83.82;
-eagleBoardH = (15.55 * 2.54); // 39.37;
+eagleBoardW = 84; // (33 * 2.54);      // 83.82;
+eagleBoardH = 40;   // (15.55 * 2.54); // 39.37;
 eagleBoardD = 2.8; // 1.8;
 eagleBoardX = 1;       // offset into board hole (1/2 of fudge value)
 eagleBoardY = .75;
@@ -16,9 +16,6 @@ eagleBoardZ = 0;
 boardW = eagleBoardW + (eagleBoardX*2);
 boardH = eagleBoardH + (eagleBoardY*2);
 boardD = eagleBoardD + skinBreak;
-
-boardX = 0;
-boardY = 4;
 
 boardFrameW = 3;
 boardFrameX = 0;
@@ -40,13 +37,13 @@ headerHeight = 2.7;
 headerYOffset = 35;
 headerAOffset = 6;
 headerAWidth = 20;
-headerBOffset = 56;
+headerBOffset = 55;
 headerBWidth = 20;
 headerY2Offset =  3;
-headerCOffset = 56;
+headerCOffset = 50;
 headerCWidth = 20;
 headerY3Offset = 12;
-headerDOffset = 2;
+headerDOffset = 1.5;
 headerDHeight = 16;
 headerDepth = 10;
 headerBackDepth = 4;
@@ -64,28 +61,6 @@ module pinClearance() {
     // pwr/spk header
         translate([headerDOffset, headerY3Offset, -headerBackDepth])
             #cube([headerHeight, headerDHeight, headerDepth]);
-
-
-
-powerW = 12;
-powerH = 13;
-powerD = 7;
-powerX = 107;
-powerY = 0;
-powerZ = -2;
-    // power jack pins
-    translate([powerX, boardH-powerH+powerY, powerZ])
-        cube([powerW, powerH, powerD]);
-
-npW = 11;
-npH = 4;
-npD = 5;
-npX = 125;
-npY = -1;
-npZ = -1;
-    // neopixel out pins
-    translate([npX, boardH-npH+npY, npZ])
-        cube([npW, npH, npD]);
 
 
 }
@@ -106,13 +81,13 @@ bcOffX = 20.5;
 bcOffY = 7.5;
 bOffY = 19;
 cOffY = 1.5;
-bcSeg = [ [-4,-5], [-4,5.5], [0,9.5], [0,10.5], [2,10.5], [4,8.5], [4,-9], [2.5,-10.5], [0,-10.5], [0,-9] ];
+bcSeg = [ [-4,-5], [-4,5.5], [0,9.5], [0,10.25], [2.5,10.25], [4,8.5], [4,-9], [2.5,-10.5], [0,-10.5], [0,-9] ];
 
 efOffX = 3;
 efOffY = 7.5;
 eOffY = 1.5;
 fOffY = 19;
-efSeg = [ [.5,-10.5], [-2,-10.5], [-4,-8.5], [-4,8.5], [-2,10.5],  [.5,10.5],  [.5,9.5],  [4,6],  [4,-5.5],  [.5,-9] ];
+efSeg = [ [.5,-10.5], [-2,-10.5], [-4,-8.5], [-4,8.5], [-2,10.25],  [.5,10.25],  [.5,9.5],  [4,6],  [4,-5.5],  [.5,-9] ];
 
 colonCenterX = 3;
 colonCenterY = 3;
@@ -122,7 +97,7 @@ colonSeg = [ [-3.5,-2.5], [-3.5,2.5],  [-2.5,3.5],  [2.5,3.5],  [3.5,2.5],  [3.5
 
 module segment(path) {
     scale([.84, .84, 1])
- #   linear_extrude(height = reflectorDepth+1, center=true, scale=.9)
+    linear_extrude(height = reflectorDepth+1, center=true, scale=.92)
         polygon(path);
 }
 
@@ -206,15 +181,17 @@ holeD = 10;
 
 
 module miniboard() {
-    cube([eagleBoardW, eagleBoardH, eagleBoardD]);
-//    pixels();
-    miniMountingHoles();
+//        cube([eagleBoardW, eagleBoardH, eagleBoardD]);
+        cube([eagleBoardW, eagleBoardH, eagleBoardD]);
+        pixels();
+        miniMountingHoles();
+      #pinClearance();
 }
 
 module xxx() {
-    refX = 5;
-    refY = 5;
-        translate([refX, refY + 3, 0]) {
+    refX = 5.5;
+    refY = 9.5;
+        translate([refX, refY, 0]) {
             scale([segMul, segMul, 1])
                 union() {
         
@@ -241,15 +218,14 @@ test = 1;
 if (test) {
    difference() {
        union() {
-            translate([0, 0, -boardD])
-                cube([boardW, boardH, boardD]);
+*               translate([-eagleBoardX, -eagleBoardY, -boardD])
+                #cube([boardW, boardH, boardD]);
             // base to carve everything out of
-            translate([boardFrameX-boardFrameW, boardFrameY-boardFrameW, -reflectorDepth])
-                cube([boardW+boardFrameW*2, reflectorHeight+boardFrameW, reflectorDepth]);
+            translate([boardFrameX-boardFrameW/2, boardFrameY-boardFrameW, -reflectorDepth])
+                cube([boardW+boardFrameW, reflectorHeight+boardFrameW, reflectorDepth]);
       }
       translate([eagleBoardX, eagleBoardY, -boardD+skinBreak*2])
         miniboard();
-      pinClearance();
        xxx();
    }
  //        translate([eagleBoardX, eagleBoardY, -boardD+skinBreak*2])
