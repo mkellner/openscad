@@ -91,8 +91,8 @@ efSeg = [ [.5,-10.5], [-2,-10.5], [-4,-8.5], [-4,8.5], [-2,10.25],  [.5,10.25], 
 
 colonCenterX = 3;
 colonCenterY = 3;
-colonOffY = 9.75;
-colonOffY2 = 21.75;
+colonOffY = 9;
+colonOffY2 = 21;
 colonSeg = [ [-3.5,-2.5], [-3.5,2.5],  [-2.5,3.5],  [2.5,3.5],  [3.5,2.5],  [3.5,-2.5],  [2.5,-3.5],  [-2.5,-3.5] ];
 
 module segment(path) {
@@ -182,7 +182,7 @@ holeD = 10;
 
 module miniboard() {
 //        cube([eagleBoardW, eagleBoardH, eagleBoardD]);
-        cube([eagleBoardW, eagleBoardH, eagleBoardD]);
+                #cube([boardW, boardH, boardD]);
         pixels();
         miniMountingHoles();
       #pinClearance();
@@ -221,8 +221,8 @@ if (test) {
 *               translate([-eagleBoardX, -eagleBoardY, -boardD])
                 #cube([boardW, boardH, boardD]);
             // base to carve everything out of
-            translate([boardFrameX-boardFrameW/2, boardFrameY-boardFrameW, -reflectorDepth])
-                cube([boardW+boardFrameW, reflectorHeight+boardFrameW, reflectorDepth]);
+            translate([boardFrameX-boardFrameW/4, boardFrameY-boardFrameW/4, -reflectorDepth])
+                cube([boardW+boardFrameW, boardH+boardFrameW, reflectorDepth]);
       }
       translate([eagleBoardX, eagleBoardY, -boardD+skinBreak*2])
         miniboard();
