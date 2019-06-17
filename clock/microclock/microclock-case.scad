@@ -32,7 +32,7 @@ reflectorD = reflectorDepth + fudge;
 
 caseMinkowskiR = 5;
 caseW = reflectorW;
-caseH = 40;                 // really depth
+caseH = 20;                 // really depth
 caseD = reflectorH+caseMinkowskiR-2;
 caseX = 0;
 caseY = 0;
@@ -96,11 +96,20 @@ viewPortY = -5;
 viewPortZ = -glassH/2;
 smallenW = glassLipSide * 2;
 smallenH = glassLipBottom * 2;
+smallenBW = glassLipSide*2;
+smallenBH = glassLipSide;
 
 module frontView() {
     translate([viewPortX+smallenW/2, viewPortY, viewPortZ+smallenH/2])
+        #minkowski() {
+            cube([glassW-smallenW, glassH/4+10, glassH-smallenH]);
+            sphere(r=caseMinkowskiR);
+        }
+}
+module backView() {
+    translate([viewPortX+smallenBW/2, viewPortY+caseH, viewPortZ+smallenBH/2])
         minkowski() {
-            cube([glassW-smallenW, glassH+10, glassH-smallenH]);
+            cube([glassW-smallenBW, glassH/4, glassH-smallenBH]);
             sphere(r=caseMinkowskiR);
         }
 }
@@ -116,7 +125,7 @@ module caseCore() {
 
 connW = 2.5;
 connW2 = connW/2;
-connH = 10;
+connH = 8;
 connH2 = connH/2;
 
 connPoly = [ [-connW2,-connH2], [connW2,-connH2], [connW2,connH2], [-connW2,connH2] ];
@@ -128,9 +137,9 @@ tabZout = 1.5;
 tabZin = -2;
 
 tabAX = -connW;
-tabAY = 5;
+tabAY = 4;
 tabBX = reflectorW+connW;
-tabBY = 20;
+tabBY = 16;
 tabCX = reflectorW+connW;
 tabCY = 35;
 tabBZ = tabZout;
@@ -144,7 +153,7 @@ module connectorPositive() {
         rotate([0, 0, 0])
         linear_extrude(height = tabD, center=true, scale=.8)
             polygon(connPoly);
-#    translate([tabCX, tabCY, tabBZ])
+*#    translate([tabCX, tabCY, tabBZ])
         rotate([0, 0, 0])
         linear_extrude(height = tabD, center=true, scale=.8)
             polygon(connPoly);
@@ -164,7 +173,7 @@ module connectorNegative() {
             scale([connNegScale, connNegScale, connNegScale])
             linear_extrude(height = tabD, center=true, scale=.8)
                 polygon(connPoly);
-    #translate([tabAX, tabCY, tabZin])
+ *   #translate([tabAX, tabCY, tabZin])
         rotate([180, 0, 0])
             scale([connNegScale, connNegScale, connNegScale])
             linear_extrude(height = tabD, center=true, scale=.8)
@@ -191,9 +200,10 @@ module oneSide() {
                     // (internal bits to void)
                     union() {
                         reflector();
-                        #glass();
+                        glass();
                         internalVoid();
                         frontView();
+                        #backView();
                     }
                 }
     
