@@ -14,8 +14,8 @@ boardFrameX = 0;
 boardFrameY = -2;
 
 // from miniclock-ref - begin
-boardW = 86;
-boardH = 41.5;     // was 63.45 - tight
+boardW = 89;
+boardH = 45.5;     // was 63.45 - tight
 boardD = 1.8 + skinBreak;
 
 reflectorWidth = boardW; // boardW;
@@ -64,7 +64,7 @@ voidH = reflectorH;
 voidD = caseH - glassD - glassLipDepth +1 -caseBackLip;
 voidAX = 0;
 voidAY = reflectorD + 2;
-voidAZ = -reflectorH/2-1;
+voidAZ = -reflectorH/2-2.5;
 
 module reflector() {
    translate([reflectorX, reflectorY, reflectorZ])
@@ -80,13 +80,13 @@ module glass() {
 module internalVoid() {
     // main volume
     translate([voidAX, voidAY, voidAZ])
-        #cube([voidW, voidD, voidH]);
+        cube([voidW, voidD, voidH]);
     //additional around board retaining lip
-    translate([voidAX+4, voidAY-4, voidAZ+2])
-        cube([voidW-8, voidD, voidH-4]);
+    translate([voidAX+6, voidAY-4, voidAZ+2])
+        cube([voidW-12, voidD, voidH-4]);
     //additional around board retaining lip
-    translate([voidAX+3, voidAY-4, voidAZ+1])
-        cube([voidW-6, voidD, voidH-4]);
+*    translate([voidAX+3, voidAY-4, voidAZ+1])
+        #cube([voidW-6, voidD, voidH-4]);
 }
 
 //    translate([7, -10, -topBottomSplit-(boardH/2)+9])
@@ -101,7 +101,7 @@ smallenBH = glassLipSide;
 
 module frontView() {
     translate([viewPortX+smallenW/2, viewPortY, viewPortZ+smallenH/2])
-        #minkowski() {
+        minkowski() {
             cube([glassW-smallenW, glassH/4+10, glassH-smallenH]);
             sphere(r=caseMinkowskiR);
         }
@@ -194,6 +194,7 @@ module oneSide() {
                     union() {
 //                    color("blue", 0.2);
                         difference() {
+                            translate([0, 0, 4])
                             caseCore();
                         }
                     }
@@ -203,7 +204,7 @@ module oneSide() {
                         glass();
                         internalVoid();
                         frontView();
-                        #backView();
+                        backView();
                     }
                 }
     
@@ -225,9 +226,9 @@ module oneSide() {
 
 // 
 
-splitX = -150;
-splitY = 20;
-splitZ = -50;
+splitX = 20;
+splitY = -120;
+splitZ = -123;
 
 if (split_it) {
     difference() {
