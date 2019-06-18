@@ -5,7 +5,10 @@ use <microclock-ref.scad>;
 
 split_it = 0;                   // half sized deep
 
+
 acrylicDepth = 3.175 + .3;
+//acrylicDepth = (3.175*2) + .3;      // double acrylic for mirrored finish
+
 
 skinBreak = 0.01;       // extra depth to poke a hole through a surface
 
@@ -17,6 +20,8 @@ boardFrameY = -2;
 boardW = 89;
 boardH = 45.5;     // was 63.45 - tight
 boardD = 1.8 + skinBreak;
+
+subsysShift = 3.5;
 
 reflectorWidth = boardW; // boardW;
 reflectorHeight = boardH + boardFrameW; // boardH + boardFrameW*2;
@@ -32,11 +37,11 @@ reflectorD = reflectorDepth + fudge;
 
 caseMinkowskiR = 5;
 caseW = reflectorW;
-caseH = 20;                 // really depth
+caseH = 20+acrylicDepth;                 // really depth
 caseD = reflectorH+caseMinkowskiR-2;
 caseX = 0;
-caseY = 0;
-caseZ = -boardH/2 - caseMinkowskiR;
+caseY = -acrylicDepth/2;
+caseZ = -boardH/2 - caseMinkowskiR + subsysShift;
 
 caseBackLip = 3;
 
@@ -47,24 +52,24 @@ glassH = reflectorH;
 glassD = acrylicDepth;
 glassX = (reflectorW - glassW) / 2;
 glassY = 0;
-glassZ = -glassH/2-1;
+glassZ = -glassH/2-1 + subsysShift;
 
 glassLipDepth = 2;
 glassLipSide = caseMinkowskiR + 1.5;
-glassLipBottom = caseMinkowskiR + 3;
+glassLipBottom = caseMinkowskiR + 3 + subsysShift;
 
 topBottomSplit = 0;
 
 reflectorX = 0;
 reflectorY = 0;
-reflectorZ = reflectorH/2-1;
+reflectorZ = reflectorH/2-1 + subsysShift;
 
 voidW = reflectorW;
 voidH = reflectorH;
 voidD = caseH - glassD - glassLipDepth +1 -caseBackLip;
 voidAX = 0;
 voidAY = reflectorD + 2;
-voidAZ = -reflectorH/2-2.5;
+voidAZ = -reflectorH/2-2.5 + subsysShift;
 
 module reflector() {
    translate([reflectorX, reflectorY, reflectorZ])
@@ -79,7 +84,7 @@ module glass() {
 
 module internalVoid() {
     // main volume
-    translate([voidAX, voidAY, voidAZ])
+    translate([voidAX, voidAY, voidAZ+2])
         cube([voidW, voidD, voidH]);
     //additional around board retaining lip
     translate([voidAX+6, voidAY-4, voidAZ+2])
@@ -92,7 +97,7 @@ module internalVoid() {
 //    translate([7, -10, -topBottomSplit-(boardH/2)+9])
 
 viewPortX = (reflectorW - glassW)/2;
-viewPortY = -5;
+viewPortY = -acrylicDepth-5;
 viewPortZ = -glassH/2;
 smallenW = glassLipSide * 2;
 smallenH = glassLipBottom * 2;
@@ -100,14 +105,14 @@ smallenBW = glassLipSide*2;
 smallenBH = glassLipSide;
 
 module frontView() {
-    translate([viewPortX+smallenW/2, viewPortY, viewPortZ+smallenH/2])
+   # translate([viewPortX+smallenW/2, viewPortY, viewPortZ+smallenH/2])
         minkowski() {
             cube([glassW-smallenW, glassH/4+10, glassH-smallenH]);
             sphere(r=caseMinkowskiR);
         }
 }
 module backView() {
-    translate([viewPortX+smallenBW/2, viewPortY+caseH, viewPortZ+smallenBH/2])
+    translate([viewPortX+smallenBW/2, viewPortY+caseH-1, viewPortZ+smallenBH])
         minkowski() {
             cube([glassW-smallenBW, glassH/4, glassH-smallenBH]);
             sphere(r=caseMinkowskiR);
