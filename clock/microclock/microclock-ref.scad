@@ -10,12 +10,16 @@ skinBreak = 0.01;       // extra depth to poke a hole through a surface
 eagleBoardW = 84; // (33 * 2.54);      // 83.82;
 eagleBoardH = 40;   // (15.55 * 2.54); // 39.37;
 eagleBoardD = 2.8; // 1.8;
-eagleBoardX = 1;       // offset into board hole (1/2 of fudge value)
+eagleBoardX = .5;       // offset into board hole (1/2 of fudge value)
 eagleBoardY = .75;
 eagleBoardZ = 0;
 boardW = eagleBoardW + (eagleBoardX*2);
 boardH = eagleBoardH + (eagleBoardY*2);
 boardD = eagleBoardD + skinBreak;
+
+echo ("boardW: ", boardW);
+echo ("boardH: ", boardH);
+echo ("boardD: ", boardD);
 
 boardFrameW = 3;
 boardFrameX = 0;
@@ -34,15 +38,16 @@ segMul = 1.27;
 
 
 headerHeight = 2.7;
-headerYOffset = 35;
+headerYOffset = 34;
 headerAOffset = 6;
 headerAWidth = 20;
+headerY1Offset = 35;
 headerBOffset = 55;
 headerBWidth = 20;
-headerY2Offset =  3;
+headerY2Offset =  2.5;
 headerCOffset = 50;
 headerCWidth = 20;
-headerY3Offset = 12;
+headerY3Offset = 11.5;
 headerDOffset = 1.5;
 headerDHeight = 16;
 headerDepth = 10;
@@ -53,14 +58,14 @@ module pinClearance() {
         translate([headerAOffset, headerYOffset, -headerBackDepth])
             cube([headerAWidth, headerHeight, headerDepth]);
     // I2C header
-        translate([headerBOffset, headerYOffset, -headerBackDepth])
+        translate([headerBOffset, headerY1Offset, -headerBackDepth])
             cube([headerBWidth, headerHeight, headerDepth]);
     // prog header
         translate([headerCOffset, headerY2Offset, -headerBackDepth])
             cube([headerCWidth, headerHeight, headerDepth]);
     // pwr/spk header
         translate([headerDOffset, headerY3Offset, -headerBackDepth])
-            #cube([headerHeight, headerDHeight, headerDepth]);
+            cube([headerHeight, headerDHeight, headerDepth]);
 
 
 }
@@ -93,7 +98,7 @@ colonCenterX = 3;
 colonCenterY = 3;
 colonOffY = 9;
 colonOffY2 = 21;
-colonSeg = [ [-3.5,-2.5], [-3.5,2.5],  [-2.5,3.5],  [2.5,3.5],  [3.5,2.5],  [3.5,-2.5],  [2.5,-3.5],  [-2.5,-3.5] ];
+colonSeg = [ [-3.75,-2.75], [-3.75,2.75],  [-2.75,3.75],  [2.75,3.75],  [3.75,2.75],  [3.75,-2.75],  [2.75,-3.75],  [-2.75,-3.75] ];
 
 module segment(path) {
     scale([.84, .84, 1])
@@ -160,8 +165,8 @@ module pixels() {
 }
 
 module miniMountingHoles() {
-holeX1 = 1 * 2.54;
-holeX2 = 32 * 2.54;
+holeX1 = .95 * 2.54;
+holeX2 = 32.05 * 2.54;
 holeY1 = 1 * 2.54;
 holeY2 = 14.75 * 2.54;
 holeZ = 0;
@@ -179,18 +184,21 @@ holeD = 10;
 
 }
 
-
+boardOffsetX = 1;
+boardOffsetY = 1;
 module miniboard() {
 //        cube([eagleBoardW, eagleBoardH, eagleBoardD]);
                 #cube([boardW, boardH, boardD]);
+    translate([boardOffsetX, boardOffsetY, 0]) {
         pixels();
         miniMountingHoles();
-      #pinClearance();
+        pinClearance();
+    }
 }
 
 module xxx() {
-    refX = 5.5;
-    refY = 9.5;
+    refX = 5.5+eagleBoardX;
+    refY = 9.5+eagleBoardY;
         translate([refX, refY, 0]) {
             scale([segMul, segMul, 1])
                 union() {
@@ -226,6 +234,7 @@ if (test) {
       }
       translate([eagleBoardX, eagleBoardY, -boardD+skinBreak*2])
         miniboard();
+//      translate([-eagleBoardX, -eagleBoardY/2, 0])
        xxx();
    }
  //        translate([eagleBoardX, eagleBoardY, -boardD+skinBreak*2])
