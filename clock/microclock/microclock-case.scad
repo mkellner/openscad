@@ -4,7 +4,7 @@ LIBRARY = 1;
 use <microclock-ref.scad>;
 
 split_it = 0;                   // half sized deep
-
+use_minkowski = 0;              // round edges or not
 
 acrylicDepth = 3.175 + .3;
 //acrylicDepth = (3.175*2) + .3;      // double acrylic for mirrored finish
@@ -105,25 +105,43 @@ smallenBW = glassLipSide*2;
 smallenBH = glassLipSide;
 
 module frontView() {
-   # translate([viewPortX+smallenW/2, viewPortY, viewPortZ+smallenH/2])
-        minkowski() {
-            cube([glassW-smallenW, glassH/4+10, glassH-smallenH]);
-            sphere(r=caseMinkowskiR);
-        }
+    if (use_minkowski) {
+#       translate([viewPortX+smallenW/2, viewPortY, viewPortZ+smallenH/2])
+            minkowski() {
+                cube([glassW-smallenW, glassH/4+10, glassH-smallenH]);
+                sphere(r=caseMinkowskiR);
+            }
+    }
+   else {
+        translate([viewPortX+smallenW/2-caseMinkowskiR, viewPortY, viewPortZ+smallenH/2-caseMinkowskiR])
+            cube([glassW-smallenW+caseMinkowskiR*2, glassH/4+10, glassH-smallenH]);
+    }
 }
 module backView() {
-    translate([viewPortX+smallenBW/2, viewPortY+caseH-1, viewPortZ+smallenBH])
-        minkowski() {
-            cube([glassW-smallenBW, glassH/4, glassH-smallenBH]);
-            sphere(r=caseMinkowskiR);
-        }
+    if (use_minkowski) {
+        translate([viewPortX+smallenBW/2, viewPortY+caseH-1, viewPortZ+smallenBH])
+            minkowski() {
+                cube([glassW-smallenBW, glassH/4, glassH-smallenBH]);
+                sphere(r=caseMinkowskiR);
+            }
+    }
+    else {
+        translate([viewPortX+smallenBW/2-caseMinkowskiR, viewPortY+caseH, viewPortZ+smallenBH-caseMinkowskiR])
+            #cube([glassW-smallenBW+caseMinkowskiR*2, glassH/4, glassH-smallenBH]);
+    }
 }
 
 module caseCore() {
-    translate([caseX, caseY, caseZ])
-    minkowski() {
-        cube([caseW, caseH, caseD]);
-            sphere(r=caseMinkowskiR);
+    if (use_minkowski) {
+        translate([caseX, caseY, caseZ])
+            minkowski() {
+                cube([caseW, caseH, caseD]);
+                sphere(r=caseMinkowskiR);
+            }
+    }
+    else {
+        translate([caseX-caseMinkowskiR, caseY-caseMinkowskiR, caseZ-caseMinkowskiR])
+           cube([caseW+caseMinkowskiR*2, caseH+caseMinkowskiR*2, caseD]);
     }
 }
 
@@ -149,18 +167,20 @@ tabCX = reflectorW+connW;
 tabCY = 35;
 tabBZ = tabZout;
 
+connPosScale = .8;
+
 module connectorPositive() {
 #    translate([tabAX, tabBY, tabBZ])
         rotate([0, 0, 0])
-        linear_extrude(height = tabD, center=true, scale=.8)
+        linear_extrude(height = tabD, center=true, scale=connPosScale)
             polygon(connPoly);
 #    translate([tabBX, tabAY, tabBZ])
         rotate([0, 0, 0])
-        linear_extrude(height = tabD, center=true, scale=.8)
+        linear_extrude(height = tabD, center=true, scale=connPosScale)
             polygon(connPoly);
 *#    translate([tabCX, tabCY, tabBZ])
         rotate([0, 0, 0])
-        linear_extrude(height = tabD, center=true, scale=.8)
+        linear_extrude(height = tabD, center=true, scale=connPosScale)
             polygon(connPoly);
 
 }
@@ -171,17 +191,17 @@ module connectorNegative() {
     #translate([tabAX, tabAY, tabZin])
         rotate([180, 0, 0])
             scale([connNegScale, connNegScale, connNegScale])
-            linear_extrude(height = tabD, center=true, scale=.8)
+            linear_extrude(height = tabD, center=true, scale=connNegScale)
                 polygon(connPoly);
     #translate([tabBX, tabBY, tabZin])
         rotate([180, 0, 0])
             scale([connNegScale, connNegScale, connNegScale])
-            linear_extrude(height = tabD, center=true, scale=.8)
+            linear_extrude(height = tabD, center=true, scale=connNegScale)
                 polygon(connPoly);
  *   #translate([tabAX, tabCY, tabZin])
         rotate([180, 0, 0])
             scale([connNegScale, connNegScale, connNegScale])
-            linear_extrude(height = tabD, center=true, scale=.8)
+            linear_extrude(height = tabD, center=true, scale=connNegScale)
                 polygon(connPoly);
 }
 
