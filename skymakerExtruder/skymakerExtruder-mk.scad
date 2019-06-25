@@ -141,13 +141,13 @@ module moreHoles() {
 }
 
 module cleanBottom() {
-    translate([0, -1, -10])
-        #cube([baseW, baseH, 10]);    
+    translate([0, -10, -10])
+       #cube([baseW, baseH, 10]);    
 }
 
 difference() {
     union() {
-    translate([26, 40, -3])
+    translate([26, 40, -3.5])
         rotate([90, 0, 90])
             import ("CTC_Aero_bracket.stl", convexity=4);
     translate([-1, 10, 0])      // x-endstop block
