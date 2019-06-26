@@ -5,6 +5,7 @@ use <microclock-ref.scad>;
 
 split_it = 0;                   // half sized deep
 use_minkowski = 0;              // round edges or not
+wallmount = 1;
 
 acrylicDepth = 3.175 + .3;
 //acrylicDepth = (3.175*2) + .3;      // double acrylic for mirrored finish
@@ -21,7 +22,7 @@ boardW = 89;
 boardH = 45.5;     // was 63.45 - tight
 boardD = 1.8 + skinBreak;
 
-subsysShift = 3.5;
+subsysShift = 3;
 
 reflectorWidth = boardW; // boardW;
 reflectorHeight = boardH + boardFrameW; // boardH + boardFrameW*2;
@@ -47,8 +48,9 @@ caseBackLip = 3;
 
 //glassW = 148.26 + fudge;
 //glassH = 65.8 + fudge;
-glassW = reflectorW;
-glassH = reflectorH;
+glassAdd = 1;
+glassW = reflectorW + glassAdd;
+glassH = reflectorH + glassAdd;
 glassD = acrylicDepth;
 glassX = (reflectorW - glassW) / 2;
 glassY = 0;
@@ -79,7 +81,7 @@ module reflector() {
 
 module glass() {
     translate([glassX, glassY-glassD, glassZ])
-        cube([glassW, glassD+skinBreak, glassH]);
+        #cube([glassW, glassD+skinBreak, glassH]);
 }
 
 module internalVoid() {
@@ -106,14 +108,14 @@ smallenBH = glassLipSide;
 
 module frontView() {
     if (use_minkowski) {
-#       translate([viewPortX+smallenW/2, viewPortY, viewPortZ+smallenH/2])
+       translate([viewPortX+smallenW/2, viewPortY, viewPortZ+smallenH/2])
             minkowski() {
                 cube([glassW-smallenW, glassH/4+10, glassH-smallenH]);
                 sphere(r=caseMinkowskiR);
             }
     }
    else {
-        translate([viewPortX+smallenW/2-caseMinkowskiR, viewPortY, viewPortZ+smallenH/2-caseMinkowskiR])
+        translate([viewPortX+smallenW/2-caseMinkowskiR, viewPortY, viewPortZ+smallenH/2-2])
             cube([glassW-smallenW+caseMinkowskiR*2, glassH/4+10, glassH-smallenH]);
     }
 }
@@ -127,7 +129,7 @@ module backView() {
     }
     else {
         translate([viewPortX+smallenBW/2-caseMinkowskiR, viewPortY+caseH, viewPortZ+smallenBH-caseMinkowskiR])
-            #cube([glassW-smallenBW+caseMinkowskiR*2, glassH/4, glassH-smallenBH]);
+            cube([glassW-smallenBW+caseMinkowskiR*2, glassH/4, glassH-smallenBH]);
     }
 }
 
@@ -185,7 +187,7 @@ module connectorPositive() {
 
 }
 
-connNegScale = 1.07;
+connNegScale = 1.1; // 1.07;
 
 module connectorNegative() {
     #translate([tabAX, tabAY, tabZin])
@@ -205,6 +207,75 @@ module connectorNegative() {
                 polygon(connPoly);
 }
 
+pinFudge = 0.3;
+pushPinR1 = 2.5 + pinFudge;
+pushPinR2 = 4 + pinFudge;
+
+pinMountW = pushPinR2*2;
+pinMountH = 6;
+pinMountD = pushPinR2*2;
+
+xpinMountX1 = 20;
+xpinMountX2 = 28;
+pinMountX1 = reflectorW*4/5;
+pinMountX2 = reflectorW/5;
+pinMountX3 = reflectorW/2;
+pinMountY = 20.5; // caseD - pinMountH;
+pinMountZ = -reflectorH/2+2.5;
+
+xpinX1 = 30;
+xpinX2 = reflectorW-pinX1+3.5;
+xpinX3 = reflectorW/2+1.75;
+pinX1 = pinMountX1;
+pinX2 = pinMountX2;
+pinX3 = pinMountX3;
+pinY = 29;
+pinZ = -reflectorH/2 +4.5;
+
+module pinMount() {
+    translate([-pushPinR1+.75, 0, 0])
+        rotate([0, 45, 0])
+            cube([pinMountW, pinMountH, pinMountD]);
+    translate([pushPinR1-14+.5, 0, 0])
+        rotate([0, 45, 0])
+            cube([pinMountW, pinMountH, pinMountD]);
+}
+
+module pinMountPositive() {
+        union() { 
+            translate([pinMountX1, pinMountY, pinMountZ])
+                pinMount();
+            translate([pinMountX2, pinMountY, pinMountZ])
+                pinMount();
+            translate([pinMountX3, pinMountY, pinMountZ])
+                pinMount();
+
+        }
+}
+module pin() {
+    union() {
+        cylinder(r=pushPinR1, h=20, center=true);
+        translate([0, 0, 10])
+            cylinder(r=pushPinR2, h=2, center=true);
+    }
+}
+
+module pinMountNegative() {
+    translate([pinX1, pinY, pinZ])
+        rotate([90, 0, 0])
+            pin();
+    translate([pinX2, pinY, pinZ])
+        rotate([90, 0, 0])
+            pin();
+
+    translate([pinX3, pinY, pinZ])
+        rotate([90, 0, 0])
+            pin();
+
+    translate([-250, -250, pinMountZ-6.2])
+          cube([500, 500, 3]);
+
+}
 
 module oneSide() {
     // remove negative tab bits
@@ -242,10 +313,17 @@ module oneSide() {
             // tabs positive
             translate([0, 0, 1])
                 connectorPositive();
+
+            if (wallmount) {
+                pinMountPositive();
+            }
         }
         // tabs negative
         translate([0, 0, 1])
             connectorNegative();
+        if (wallmount) {
+           pinMountNegative();
+        }
     }
 }
 
