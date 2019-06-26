@@ -11,7 +11,7 @@ eagleBoardW = 84; // (33 * 2.54);      // 83.82;
 eagleBoardH = 40;   // (15.55 * 2.54); // 39.37;
 eagleBoardD = 2.8; // 1.8;
 eagleBoardX = .5;       // offset into board hole (1/2 of fudge value)
-eagleBoardY = .75;
+eagleBoardY = .5;
 eagleBoardZ = 0;
 boardW = eagleBoardW + (eagleBoardX*2);
 boardH = eagleBoardH + (eagleBoardY*2);
@@ -38,7 +38,7 @@ segMul = 1.27;
 
 
 headerHeight = 2.7;
-headerYOffset = 34;
+headerYOffset = 34.8;
 headerAOffset = 6;
 headerAWidth = 20;
 headerY1Offset = 35;
@@ -167,8 +167,8 @@ module pixels() {
 module miniMountingHoles() {
 holeX1 = .95 * 2.54;
 holeX2 = 32.05 * 2.54;
-holeY1 = 1 * 2.54;
-holeY2 = 14.75 * 2.54;
+holeY1 = .95 * 2.54;
+holeY2 = 14.6 * 2.54;
 holeZ = 0;
 holeR = 2.9/2;
 holeD = 10;
