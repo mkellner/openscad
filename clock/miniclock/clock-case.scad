@@ -1,4 +1,4 @@
-
+$fn=32;
 LIBRARY = 1;
 
 use <miniclock-ref.scad>;
@@ -8,10 +8,6 @@ split_it = 0;                   // half sized deep
 acrylicDepth = 3.175 + .3;
 
 skinBreak = 0.01;       // extra depth to poke a hole through a surface
-
-boardW = 146;
-boardH = 63.7;     // was 63.45 - tight
-boardD = 1.8 + skinBreak;
 
 boardFrameW = 3;
 boardFrameX = 0;
@@ -23,7 +19,7 @@ boardH = 63.7;     // was 63.45 - tight
 boardD = 1.8 + skinBreak;
 
 reflectorWidth = 152.8; // boardW;
-reflectorHeight = 75.6; // boardH + boardFrameW*2;
+reflectorHeight = 73.6; // boardH + boardFrameW*2;
 reflectorDepth = 10;
 // from miniclock-ref - end
 
@@ -34,7 +30,7 @@ reflectorW = reflectorWidth + fudge;
 reflectorH = reflectorHeight + fudge;
 reflectorD = reflectorDepth + fudge;
 
-caseMinkowskiR = 5;
+caseMinkowskiR = 6;
 caseW = reflectorW;
 caseH = 40;                 // really depth
 caseD = reflectorH+caseMinkowskiR-2;
@@ -46,7 +42,7 @@ caseBackLip = 3;
 
 //glassW = 148.26 + fudge;
 //glassH = 65.8 + fudge;
-glassW = 153 + fudge;
+glassW = 153.5 + fudge;
 glassH = 76 + fudge;
 glassD = acrylicDepth;
 glassX = (reflectorW - glassW) / 2;
@@ -83,11 +79,11 @@ module glass() {
 
 module internalVoid() {
     // main volume
-    translate([voidAX, voidAY, voidAZ])
-        cube([voidW, voidD, voidH]);
+    translate([voidAX+1, voidAY, voidAZ])
+        cube([voidW-2, voidD, voidH]);
     //additional around board retaining lip
-    translate([voidAX+2, voidAY-4, voidAZ+2])
-        cube([voidW-4, voidD, voidH-4]);
+    translate([voidAX+3, voidAY-6, voidAZ+2])
+        #cube([voidW-6, voidD-2, voidH-4]);
 }
 
 //    translate([7, -10, -topBottomSplit-(boardH/2)+9])
@@ -156,17 +152,17 @@ module connectorNegative() {
     #translate([tabAX, tabAY, tabZin])
         rotate([180, 0, 0])
             scale([1.05, 1.05, 1])
-            linear_extrude(height = tabD, center=true, scale=.8)
+            linear_extrude(height = tabD+1, center=true, scale=.8)
                 polygon(connPoly);
     #translate([tabBX, tabBY, tabZin])
         rotate([180, 0, 0])
             scale([1.05, 1.05, 1])
-            linear_extrude(height = tabD, center=true, scale=.8)
+            linear_extrude(height = tabD+1, center=true, scale=.8)
                 polygon(connPoly);
     #translate([tabAX, tabCY, tabZin])
         rotate([180, 0, 0])
             scale([1.05, 1.05, 1])
-            linear_extrude(height = tabD, center=true, scale=.8)
+            linear_extrude(height = tabD+1, center=true, scale=.8)
                 polygon(connPoly);
 }
 
@@ -220,7 +216,7 @@ splitZ = -50;
 
 if (split_it) {
     difference() {
-        translate([0, 0, -1])
+        translate([0, 0, 0])
             oneSide();
         translate([splitX, splitY, splitZ])
             cube([500, 500, 500]);
