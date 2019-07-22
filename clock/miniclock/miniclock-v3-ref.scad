@@ -105,10 +105,10 @@ headerBackDepth = 4;
 
 module pinClearance() {
     // expansion header
-        translate([headerAOffset, boardH-headerHeight, -boardD])
+*        translate([headerAOffset, boardH-headerHeight, -boardD])
             cube([headerAWidth, headerHeight, headerDepth]);
     // prog header
-        translate([headerBOffset, boardH-headerHeight, -boardD])
+*        translate([headerBOffset, boardH-headerHeight, -boardD])
             cube([headerBWidth, headerHeight, headerDepth]);
 
 switchAOffset = 0;
@@ -131,12 +131,12 @@ powerL = [ 107, boardH-13, -2];
 neopixelOutD = [ 11, 7, 5 ];
 neopixelOutL = [ 125, boardH-7-1, -2];
     // neopixel out pins
-    #translate(neopixelOutL) cube(neopixelOutD);
+*    #translate(neopixelOutL) cube(neopixelOutD);
 
-holeX1 = eagleBoardX + 2.54;
-holeX2 = eagleBoardX + eagleBoardW - 2.54 +1;
-holeY1 = eagleBoardY + 2.54;
-holeY2 = eagleBoardY + eagleBoardH - 2.54;
+holeX1 = eagleBoardX + 2.54 - .3;
+holeX2 = eagleBoardX + eagleBoardW - 2.54 - .3;
+holeY1 = eagleBoardY + 2.54 + .5;
+holeY2 = eagleBoardY + eagleBoardH - 2.54 - .75;
 holeZ = 0;
 holeR = 2.6/2;
 holeD = 10;
@@ -144,14 +144,14 @@ holeD = 10;
     translate([holeX1, holeY1, holeZ])
         cylinder(r=holeR, h=holeD, center=true);
     translate([holeX1, holeY2, holeZ])
+        #cylinder(r=holeR, h=holeD, center=true);
+    translate([holeX2+.3, holeY1, holeZ])
         cylinder(r=holeR, h=holeD, center=true);
-    translate([holeX2, holeY1, holeZ])
-        #cylinder(r=holeR, h=holeD, center=true);
     translate([holeX2, holeY2, holeZ])
-        #cylinder(r=holeR, h=holeD, center=true);
+        cylinder(r=holeR, h=holeD, center=true);
 
     // voids
-svPD = [ [130, 8, 10], [147, 6, 10], [17, 7, 10], [17, 14, 10], [14, 7, 10], [14, 7, 10],
+svPD = [ [130, 9, 10], [147, 6, 10], [17, 7, 10], [17, 14, 10], [14, 7, 10], [14, 7, 10],
 ];
 svPL = [ [8, 56, -4], [-.5, -8, -4], [64, 0, -4], [64, 50, -4], [27, 0, -4], [104, 0, -4],
 ];
@@ -171,7 +171,7 @@ centNum = 7;
 
 for (i=[0:1:centNum])
     translate(centL[i])
-        #cube(centD);
+        cube(centD);
 
 }
 
@@ -209,9 +209,9 @@ echo("Total[", boardW+boardFrameW*2, boardH+boardFrameW*2+6, reflectorDepth, "]"
                     translate([54.5, 0, 0])
                         colons();
                     
-                    translate([62.75, 0, 0])
+                    translate([62.5, 0, 0])
                         sevenSeg();
-                    translate([90, 0, 0])
+                    translate([89.75, 0, 0])
                         sevenSeg();
                 }
             }
