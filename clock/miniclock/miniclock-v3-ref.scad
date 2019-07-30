@@ -111,16 +111,16 @@ module pinClearance() {
 *        translate([headerBOffset, boardH-headerHeight, -boardD])
             cube([headerBWidth, headerHeight, headerDepth]);
 
-switchAOffset = 0;
-switchBOffset = 138;
+switchAOffset = -.3;
+switchBOffset = 138.6;
 switchYOffset = 5.7;
 switchWidth = 7.3;
-switchHeight = 9;
+switchHeight = 8.5;
 switchPinDepth = boardD + headerBackDepth;
     // reset and boot switches
         translate([switchAOffset, boardH-switchHeight-switchYOffset, switchPinDepth-boardD - headerBackDepth])
-            cube([switchWidth, switchHeight, switchPinDepth]);
-        #translate([switchBOffset, boardH-switchHeight-switchYOffset, switchPinDepth-boardD - headerBackDepth])
+        #    cube([switchWidth, switchHeight, switchPinDepth]);
+        translate([switchBOffset, boardH-switchHeight-switchYOffset, switchPinDepth-boardD - headerBackDepth])
             cube([switchWidth, switchHeight, switchPinDepth]);
 
 powerD = [ 12, 13, 7 ];
@@ -151,21 +151,24 @@ holeD = 10;
         cylinder(r=holeR, h=holeD, center=true);
 
     // voids
-svPD = [ [130, 9, 10], [147, 6, 10], [17, 7, 10], [17, 14, 10], [14, 7, 10], [14, 7, 10],
+svPD = [ [130, 8, 10], [147, 6, 12], [16, 12, 14],
+          [15, 5, 10], [12, 5, 10], [12, 5, 10],
 ];
-svPL = [ [8, 56, -4], [-.5, -8, -4], [64, 0, -4], [64, 50, -4], [27, 0, -4], [104, 0, -4],
+svPL = [ [8, 57, -7], [-.5, -8, -7], [64.5, 51, -7],
+         [65, 0, -7], [27, 0, -7], [105, 0, -7],
 ];
 svPNum = 6;
 
 for (i=[0:1:svPNum])
     translate(svPL[i])
-       cube(svPD[i]);
+       #cube(svPD[i]);
 
-centD = [ 10, 10, 10 ];
-centL = [ [11.5, 12.5, -4], [11.5, 34.5, -4],
-          [46, 12.5, -4], [46, 34.5, -4],
-          [89.5, 12.5, -4], [89.5, 34.5, -4],
-          [124.25, 12.5, -4], [124.25, 34.5, -4],
+centZ = -9;
+centD = [ 10, 10, 14 ];
+centL = [ [11.5, 12.5, centZ], [11.5, 34.5, centZ],
+          [46, 12.5, centZ], [46, 34.5, centZ],
+          [89.5, 12.5, centZ], [89.5, 34.5, centZ],
+          [124.25, 12.5, centZ], [124.25, 34.5, centZ],
 ];
 centNum = 7;
 
