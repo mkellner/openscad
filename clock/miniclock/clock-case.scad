@@ -5,6 +5,11 @@ use <miniclock-ref.scad>;
 
 split_it = 0;                   // half sized deep
 
+doCardHolder = 0;
+    withCutout = 0;
+doSwitches = 0;
+doLED = 0;
+
 acrylicDepth = 3.175 + .3;
 
 skinBreak = 0.01;       // extra depth to poke a hole through a surface
@@ -83,7 +88,7 @@ module internalVoid() {
         cube([voidW-2, voidD, voidH]);
     //additional around board retaining lip
     translate([voidAX+3, voidAY-6, voidAZ+2])
-        #cube([voidW-6, voidD-2, voidH-4]);
+        cube([voidW-6, voidD-2, voidH-4]);
 }
 
 //    translate([7, -10, -topBottomSplit-(boardH/2)+9])
@@ -102,8 +107,10 @@ module frontView() {
         }
 }
 
+rx = 0;
+rz = -2;
 module caseCore() {
-    translate([caseX, caseY, caseZ])
+    translate([caseX-rx, caseY, caseZ-rz])
     minkowski() {
         cube([caseW, caseH, caseD]);
             sphere(r=caseMinkowskiR);
@@ -122,7 +129,7 @@ tabW = 2.5;
 tabD = 4;
 
 tabZout = 1.5;
-tabZin = -2;
+tabZin = -2.7;
 
 tabAX = -connW;
 tabAY = 5;
@@ -132,39 +139,95 @@ tabCX = reflectorW+connW;
 tabCY = 35;
 tabBZ = tabZout;
 
-module connectorPositive() {
-#    translate([tabAX, tabBY, tabBZ])
-        rotate([0, 0, 0])
-        linear_extrude(height = tabD, center=true, scale=.8)
-            polygon(connPoly);
-#    translate([tabBX, tabAY, tabBZ])
-        rotate([0, 0, 0])
-        linear_extrude(height = tabD, center=true, scale=.8)
-            polygon(connPoly);
-#    translate([tabCX, tabCY, tabBZ])
-        rotate([0, 0, 0])
-        linear_extrude(height = tabD, center=true, scale=.8)
-            polygon(connPoly);
+tabNegDepthAdd = .5;
+tabNegScale = [ 1.15, 1.15, 1.4 ];
 
+module connectorPositive() {
+    translate([tabAX, tabBY, tabBZ])
+        rotate([0, 0, 0])
+        linear_extrude(height = tabD, center=true, scale=.8)
+            polygon(connPoly);
+    translate([tabBX, tabAY, tabBZ])
+        rotate([0, 0, 0])
+        linear_extrude(height = tabD, center=true, scale=.8)
+            polygon(connPoly);
+    translate([tabCX, tabCY, tabBZ])
+        rotate([0, 0, 0])
+        linear_extrude(height = tabD, center=true, scale=.8)
+            polygon(connPoly);
 }
 
 module connectorNegative() {
-    #translate([tabAX, tabAY, tabZin])
+    color("blue") {
+    translate([tabAX, tabAY, tabZin])
         rotate([180, 0, 0])
-            scale([1.05, 1.05, 1])
-            linear_extrude(height = tabD+1, center=true, scale=.8)
+            scale(tabNegScale)
+            linear_extrude(height = tabD+tabNegDepthAdd, center=true, scale=.8)
                 polygon(connPoly);
-    #translate([tabBX, tabBY, tabZin])
+    translate([tabBX, tabBY, tabZin])
         rotate([180, 0, 0])
-            scale([1.05, 1.05, 1])
-            linear_extrude(height = tabD+1, center=true, scale=.8)
+            scale(tabNegScale)
+            linear_extrude(height = tabD+tabNegDepthAdd, center=true, scale=.8)
                 polygon(connPoly);
-    #translate([tabAX, tabCY, tabZin])
+    translate([tabAX, tabCY, tabZin])
         rotate([180, 0, 0])
-            scale([1.05, 1.05, 1])
-            linear_extrude(height = tabD+1, center=true, scale=.8)
+            scale(tabNegScale)
+            linear_extrude(height = tabD+tabNegDepthAdd, center=true, scale=.8)
                 polygon(connPoly);
+    }
 }
+
+cardW = 106; // 92;
+cardH = 51;
+cardD = 10;
+
+cardX = (reflectorW -cardW)/2+2;
+cardY = 51;
+cardZ = -70;
+
+cardWall = 1.7;
+
+cardR = [ 90+7.5, 0, 0 ];
+
+cardTopL = [cardX-cardWall*2, 27.1, -21.5];
+cardTopD = [ cardW+cardWall*2, 13.8, 3 ];
+
+module cardHolderPositive() {
+    translate([cardX-cardWall*2, cardY-cardWall*2, cardZ-cardWall*2])
+        rotate(cardR)
+           cube([cardW+cardWall*2, cardH+cardWall*2, cardD+cardWall*2]);
+}
+
+cardCutoutL = [cardX+13-2, -10, -27];
+cardCutoutD = [cardW-26, cardH, cardD];
+cardCutoutR = [ 90, 0, 0 ];
+module cardHolderNegative() {
+    translate([cardX-cardWall, cardY-cardWall*3, cardZ-cardWall])
+        rotate(cardR)
+           cube([cardW, cardH+5, cardD]);
+    if (withCutout)
+    translate(cardCutoutL)
+        minkowski() {
+            cube(cardCutoutD);
+            sphere(r=caseMinkowskiR);
+        }
+}
+
+module ledMountSm() {
+    ledSlop = 0.4;
+    ledMountR = (7 + ledSlop) / 2;
+    ledMountD = 6.75;
+    ledMountBaseR = 7.9 / 2;
+    ledMountBaseH = 0.9;
+    
+    rotate([0, 180, 0])
+        union() {
+            cylinder(r = ledMountBaseR, h = ledMountBaseH);
+            translate([0, 0, -ledMountD]) 
+                cylinder(r = ledMountR, h = ledMountD);
+        }
+}
+
 
 
 module oneSide() {
@@ -194,34 +257,110 @@ module oneSide() {
     
             
                 // cut in half
-                translate([-150, -50, 1])
-                    cube([500, 500, 500]);
+                translate([-20, -50, 1])
+                    cube([200, 200, 200]);
             }
             
             // tabs positive
             translate([0, 0, 1])
                 connectorPositive();
-        }
+ 
+            if (doCardHolder)
+                cardHolderPositive();
+       }
         // tabs negative
         translate([0, 0, 1])
             connectorNegative();
+        
+       // switch holes
+       swOffset1 = 7.5;
+       swOffset2 = 19;
+       swOffsetY1 = 35;
+       swOffsetY2 = 22;
+       swOffsetY3 = 22;
+      if (doSwitches) {
+            translate([reflectorW-swOffset1, swOffsetY1, -42])
+#              ledMountSm();
+            translate([swOffset1, swOffsetY1, -42])
+#              ledMountSm();
+#          translate([reflectorW-swOffset2, swOffsetY2, -42])
+               ledMountSm();
+#          translate([swOffset2, swOffsetY2, -42])
+               ledMountSm();
+        }
+        
+        // hole for IR receiver
+       if (doLED) {
+            translate([reflectorW/2, swOffsetY3, -42])
+#              ledMountSm();
+        }
+        
+        // card holder
+        if (doCardHolder)
+            cardHolderNegative();
+        
+                // clean bottom
+                translate([-20, -50, -141])
+                    cube([200, 200, 100]);
+    }
+    
+    // flat cardholder bottom
+    if (doCardHolder) {
+        difference() {
+            translate(cardTopL)
+                cube(cardTopD);
+           if (withCutout)
+            translate(cardCutoutL)
+                minkowski() {
+                    cube(cardCutoutD);
+                    sphere(r=caseMinkowskiR);
+                }
+        }
     }
 }
 
 // 
+splitItL = [ -150, 20, -50 ];
 
-splitX = -150;
-splitY = 20;
-splitZ = -50;
 
-if (split_it) {
-    difference() {
-        translate([0, 0, 0])
-            oneSide();
-        translate([splitX, splitY, splitZ])
-            cube([500, 500, 500]);
+module doIt() {
+    if (split_it) {
+        difference() {
+            translate([0, 0, 0])
+                oneSide();
+            translate(splitItL)
+                cube([500, 500, 500]);
+        }
+    }
+    else {
+        oneSide();
+    }
+}
+
+testCardHolder = 0;
+testConnectors = 0;
+
+if (testCardHolder) {
+    intersection([10, 10, 10]) {
+        translate([23, 20, -50])
+            cube([100,200,100]);
+        doIt();
+    }
+}
+else if (testConnectors) {
+    translate([140, 0, 0])
+    intersection([10, 10, 10]) {
+        translate([-127, -20, -5])
+            cube([200,200,100]);
+        doIt();
+    }
+    translate([0, 0, 0])
+    intersection([10, 10, 10]) {
+        translate([127, -20, -5])
+            #cube([200,200,100]);
+        doIt();
     }
 }
 else {
-    oneSide();
+    doIt();
 }

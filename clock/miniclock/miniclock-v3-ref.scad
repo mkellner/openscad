@@ -5,6 +5,8 @@ skinBreak = 0.01;       // extra depth to poke a hole through a surface
 //boardW = 146;
 //boardH = 63.7;     // was 63.45 - tight
 
+skootchRightTwo = 0.25;                
+
 // Eagle dimensions of v.3 board
 //  + slop to fit
 eagleBoardW = 144.78;
@@ -63,7 +65,7 @@ module segment(path) {
         polygon(path);
 }
 
-ssZ = -1;
+ssZ = -2;
 module sevenSeg() {
     
     translate([adgOffX + aOffX, adgOffY + aOffY, ssZ])
@@ -115,23 +117,28 @@ switchAOffset = -.3;
 switchBOffset = 138.6;
 switchYOffset = 5.7;
 switchWidth = 7.3;
-switchHeight = 8.5;
+switchHeight = 9.5;
 switchPinDepth = boardD + headerBackDepth;
     // reset and boot switches
         translate([switchAOffset, boardH-switchHeight-switchYOffset, switchPinDepth-boardD - headerBackDepth])
-        #    cube([switchWidth, switchHeight, switchPinDepth]);
+            cube([switchWidth, switchHeight, switchPinDepth]);
         translate([switchBOffset, boardH-switchHeight-switchYOffset, switchPinDepth-boardD - headerBackDepth])
             cube([switchWidth, switchHeight, switchPinDepth]);
 
-powerD = [ 12, 13, 7 ];
-powerL = [ 107, boardH-13, -2];
+powerD = [ 13, 13, 15 ];
+powerL = [ 104, boardH-14, -8];
+powerL2 = [ 27, boardH-14, -8];
     // power jack pins
-    translate(powerL) cube (powerD);
+ #   translate(powerL) cube (powerD);
+ #   translate(powerL2) cube (powerD);
 
-neopixelOutD = [ 11, 7, 5 ];
-neopixelOutL = [ 125, boardH-7-1, -2];
+neopixelOutD = [ 12, 7, 5 ];
+neopixelOutL = [ 127, boardH-7-2.5, -2];
+neopixelInD = [ 11, 7, 5 ];
+neopixelInL = [ 8, boardH-7-2.5, -2];
     // neopixel out pins
-*    #translate(neopixelOutL) cube(neopixelOutD);
+*   translate(neopixelOutL) cube(neopixelOutD);
+*    translate(neopixelInL) cube(neopixelInD);
 
 holeX1 = eagleBoardX + 2.54 - .3;
 holeX2 = eagleBoardX + eagleBoardW - 2.54 - .3;
@@ -151,24 +158,24 @@ holeD = 10;
         cylinder(r=holeR, h=holeD, center=true);
 
     // voids
-svPD = [ [130, 8, 10], [147, 6, 12], [16, 12, 14],
+svPD = [ [134, 9, 10], [147, 6, 12], [18, 12, 14],
           [15, 5, 10], [12, 5, 10], [12, 5, 10],
 ];
-svPL = [ [8, 57, -7], [-.5, -8, -7], [64.5, 51, -7],
+svPL = [ [6, 56, -7], [-.5, -8, -7], [63.5, 51, -7],
          [65, 0, -7], [27, 0, -7], [105, 0, -7],
 ];
-svPNum = 6;
+svPNum = 5;
 
 for (i=[0:1:svPNum])
     translate(svPL[i])
-       #cube(svPD[i]);
+       cube(svPD[i]);
 
 centZ = -9;
 centD = [ 10, 10, 14 ];
-centL = [ [11.5, 12.5, centZ], [11.5, 34.5, centZ],
-          [46, 12.5, centZ], [46, 34.5, centZ],
-          [89.5, 12.5, centZ], [89.5, 34.5, centZ],
-          [124.25, 12.5, centZ], [124.25, 34.5, centZ],
+centL = [ [11.25, 12.5, centZ], [11.25, 34.25, centZ],
+          [45.5, 12.5, centZ], [45.5, 34.25, centZ],
+          [88.75-skootchRightTwo, 12.5, centZ], [88.75-skootchRightTwo, 34.25, centZ],
+          [123-skootchRightTwo, 12.5, centZ], [123-skootchRightTwo, 34.25, centZ],
 ];
 centNum = 7;
 
@@ -180,48 +187,72 @@ for (i=[0:1:centNum])
 
 
 module miniclock_reflector() {
-difference() {
-    // base to carve everything out of
-    translate([boardFrameX-boardFrameW, boardFrameY-boardFrameW, -reflectorDepth])
-        cube([boardW+boardFrameW*2, boardH+boardFrameW*2+6, reflectorDepth]);
-echo("Total[", boardW+boardFrameW*2, boardH+boardFrameW*2+6, reflectorDepth, "]");
-
-    translate([boardFrameX + boardW, boardFrameY + boardH + boardFrameW, 0])
-        rotate([0, 0, 180])
-    union() {
-        // pcb
-       translate([boardX-.25, boardY-.25, -boardD+skinBreak])
-            cube([boardW+.5, boardH+.5, boardD]);
-        
-        // header pins
-        translate([boardX, boardY, -headerBackDepth])
-            pinClearance();
-
-        // seven segments (* 4) + colon
-        // was [boardX -1, boardY + 2, 0]
-        translate([boardX - 1.5, boardY + 3, 0]) {
-            scale([segMul, segMul, 1])
-                union() {
-        
-                translate([1, 0, -refOffZ]) {
-                    translate([1, 0, 0])
-                        sevenSeg();
-                    translate([28, 0, 0])
-                        sevenSeg();
-                    
-                    translate([54.5, 0, 0])
-                        colons();
-                    
-                    translate([62.5, 0, 0])
-                        sevenSeg();
-                    translate([89.75, 0, 0])
-                        sevenSeg();
+    difference() {
+        // base to carve everything out of
+        translate([boardFrameX-boardFrameW, boardFrameY-boardFrameW, -reflectorDepth])
+            cube([boardW+boardFrameW*2, boardH+boardFrameW*2+6, reflectorDepth]);
+    echo("Total[", boardW+boardFrameW*2, boardH+boardFrameW*2+6, reflectorDepth, "]");
+    
+        translate([boardFrameX + boardW, boardFrameY + boardH + boardFrameW, 0])
+            rotate([0, 0, 180])
+        union() {
+            // pcb
+           translate([boardX-.25, boardY-.25, -boardD+skinBreak])
+                cube([boardW+.5, boardH+.5, boardD]);
+            
+            // header pins
+            translate([boardX, boardY, -headerBackDepth])
+                pinClearance();
+    
+            // seven segments (* 4) + colon
+            // was [boardX -1, boardY + 2, 0]
+            translate([boardX - 1.5, boardY + 3, 0]) {
+                scale([segMul, segMul, 1])
+                    union() {
+            
+                    translate([1, 0, -refOffZ]) {
+                        translate([1, 0, 0])
+                            sevenSeg();
+                        translate([28, 0, 0])
+                            sevenSeg();
+                        
+                        translate([54-skootchRightTwo/2, 0, 0])
+                            colons();
+                        translate([62-skootchRightTwo, 0, 0])
+                            sevenSeg();
+                        translate([89-skootchRightTwo, 0, 0])
+                            sevenSeg();
+                    }
                 }
             }
         }
     }
-}
+    attachL = [boardW/2-3, -4, -reflectorDepth];
+    attachL2 = [boardW/3-3, 62, -reflectorDepth];
+    attachL3 = [2*boardW/3-3, 62, -reflectorDepth];
+    attachD = [ 3, 16, reflectorDepth-2 ];
+    attachD2 = [ 3, 9, reflectorDepth ];
+    translate(attachL)
+    cube(attachD);
+    translate(attachL2)
+    cube(attachD2);
+    translate(attachL3)
+    cube(attachD2);
 }
 
+sectL = [ -5, -5, -5 ];
+sectD = [boardW+boardFrameW*2+10, boardH+boardFrameW*2+6+10, 2];
+
+takeSlice = 0;
+
+if (takeSlice) {
+    intersection() {
+        miniclock_reflector();
+        translate(sectL)
+            cube(sectD);
+   }
+}
+else {
 if (!LIBRARY)
     miniclock_reflector();
+}

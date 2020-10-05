@@ -27,7 +27,8 @@ boardFrameY = 0;
 
 reflectorWidth = boardW;
 reflectorHeight = boardH + boardFrameW;
-reflectorDepth = 7;
+reflectorDepth = 10;
+
 refOffZ = reflectorDepth / 2;
 
 strokeWidth = 0.3;
@@ -53,7 +54,7 @@ headerDHeight = 16;
 headerDepth = 10;
 headerBackDepth = 4;
 
-module pinClearance() {
+module xpinClearance() {
     // pixel I/O header
         translate([headerAOffset, headerYOffset, -headerBackDepth])
             cube([headerAWidth, headerHeight, headerDepth]);
@@ -66,43 +67,78 @@ module pinClearance() {
     // pwr/spk header
         translate([headerDOffset, headerY3Offset, -headerBackDepth])
             cube([headerHeight, headerDHeight, headerDepth]);
-
-
 }
 
+cutoutZ = -9;
+cutoutDepth = 10;
+
+cutoutL = [ [6, 35.2, cutoutZ], [43, 35.2, cutoutZ], 
+    [6, 0, cutoutZ], [30.5, 0, cutoutZ], [47, 0, cutoutZ], 
+    [-.5,6.5,cutoutZ],
+    [79.5, 6.5, cutoutZ], [ 79.5, 20.5, cutoutZ], 
+    ];
+cutoutD = [ [35, 5, cutoutDepth], [35, 5, cutoutDepth], 
+    [23, 4.75, cutoutDepth], [15, 4.75, cutoutDepth], [31, 4.75, cutoutDepth],
+    [4,27,cutoutDepth],
+    [4,13,cutoutDepth], [4,13.5,cutoutDepth],
+     ];
+cutoutNum = 7;
+
+centerL = [ [10.67,12,cutoutZ], [10.67,23.25,cutoutZ],
+            [28.5,12,cutoutZ], [28.5,23.25,cutoutZ],
+            [49.75,12,cutoutZ], [49.75,23.25,cutoutZ],
+            [68,12,cutoutZ], [68,23.25,cutoutZ],
+];
+centerD = [5,5,cutoutDepth];
+
+centerNum = 7;
+
+module pinClearance() {
+    for (i=[0:1:cutoutNum])
+        translate(cutoutL[i])
+            cube(cutoutD[i]);
+    for (i=[0:1:centerNum])
+        translate(centerL[i])
+            cube(centerD);
+}
 
 
 segMul = .254 * 2.54;
 
 adgOffX = 8;
 adgOffY = 2;
-aOffX = 4;
-aOffY = 33.5;
+aOffX = 3.75;
+aOffY = 33.25;
 dOffY = -1.5;
-gOffY = 16;
-adgSeg = [ [-9.5,-1.5], [-9.5,1.5], [-6.5,4.5], [6,4.5], [9.5,1], [9.5,-1], [6.5,-4.5], [-6.5,-4.5] ];
+gOffY = 15.8;
+adgSeg = [ [-8.75,-1.5], [-8.75,1.5], [-5.75,5], [5.75,5],
+           [8.75,1.5], [8.75,-1.5], [5.75,-4.5], [-5.75,-4.5] ];
 
 bcOffX = 20.5;
 bcOffY = 7.5;
 bOffY = 19;
 cOffY = 1.5;
-bcSeg = [ [-4,-5], [-4,5.5], [0,9.5], [0,10.25], [2.5,10.25], [4,8.5], [4,-9], [2.5,-10.5], [0,-10.5], [0,-9] ];
+bcSeg = [ [-4,-6], [-4,6.5], [-.5,10.75], [2,10.75],
+          [4,8.5], [4,-8.5], [2.5,-10.75], [-.5,-10.75] ];
 
 efOffX = 3;
 efOffY = 7.5;
 eOffY = 1.5;
 fOffY = 19;
-efSeg = [ [.5,-10.5], [-2,-10.5], [-4,-8.5], [-4,8.5], [-2,10.25],  [.5,10.25],  [.5,9.5],  [4,6],  [4,-5.5],  [.5,-9] ];
+efSeg = [ [.5,-10.5], [-2,-10.5], [-4,-8.5], [-4,8.5],
+          [-2,11],  [.5,11],  [4,6.5],  [4,-6.5] ];
 
 colonCenterX = 3;
 colonCenterY = 3;
-colonOffY = 9;
+colonOffY = 9.25;
 colonOffY2 = 21;
-colonSeg = [ [-3.75,-2.75], [-3.75,2.75],  [-2.75,3.75],  [2.75,3.75],  [3.75,2.75],  [3.75,-2.75],  [2.75,-3.75],  [-2.75,-3.75] ];
+colonSeg = [ [-3.75,-2.75], [-3.75,2.75],  [-2.75,3.75],  [2.75,3.75],
+             [3.75,2.75],  [3.75,-2.75],  [2.75,-3.75],  [-2.75,-3.75] ];
 
+segScale = .72;
 module segment(path) {
-    scale([.84, .84, 1])
-    linear_extrude(height = reflectorDepth+1, center=true, scale=.92)
+    scale([segScale, segScale, 1])
+    linear_extrude(height = reflectorDepth+1, center=true, scale=1)
         polygon(path);
 }
 
@@ -165,12 +201,12 @@ module pixels() {
 }
 
 module miniMountingHoles() {
-holeX1 = .95 * 2.54;
+holeX1 = .93 * 2.54;
 holeX2 = 32.05 * 2.54;
 holeY1 = .95 * 2.54;
 holeY2 = 14.6 * 2.54;
 holeZ = 0;
-holeR = 2.9/2;
+holeR = 2.5/2;
 holeD = 10;
     // mounting holes
     translate([holeX1, holeY1, holeZ])
@@ -187,16 +223,16 @@ holeD = 10;
 boardOffsetX = 1;
 boardOffsetY = 1;
 module miniboard() {
-//        cube([eagleBoardW, eagleBoardH, eagleBoardD]);
-                #cube([boardW, boardH, boardD]);
-    translate([boardOffsetX, boardOffsetY, 0]) {
-        pixels();
+   translate([0, .5, 0])    // to fix sloppiness in board area
+        cube([boardW-.8, boardH-.5, boardD]);
+   translate([boardOffsetX, boardOffsetY, 0]) {
+*        pixels();
         miniMountingHoles();
         pinClearance();
     }
 }
 
-module xxx() {
+module segments() {
     refX = 5.5+eagleBoardX;
     refY = 9.5+eagleBoardY;
         translate([refX, refY, 0]) {
@@ -204,6 +240,7 @@ module xxx() {
                 union() {
         
                 translate([1, 0, -refOffZ]) {
+          if (0) {
                     translate([1, 0, 0])
                         sevenSeg();
                     translate([28.5, 0, 0])
@@ -216,31 +253,57 @@ module xxx() {
                         sevenSeg();
                     translate([89.5, 0, 0])
                         sevenSeg();
+            }
+            else {
+                    translate([.7, 0, 0])
+                        sevenSeg();
+                    translate([28.2, 0, 0])
+                        sevenSeg();
+                    
+                    translate([53.25, 0, 0])
+                        colons();
+                    
+                    translate([61.25, 0, 0])
+                        sevenSeg();
+                    translate([89.5, 0, 0])
+                        sevenSeg();
+            }
                 }
             }
         }
 
 }
 
-test = 1;
-if (test) {
-   difference() {
-       union() {
-*               translate([-eagleBoardX, -eagleBoardY, -boardD])
-                #cube([boardW, boardH, boardD]);
+module microclock_reflector() {
+
+    difference() {
+        union() {
             // base to carve everything out of
             translate([boardFrameX-boardFrameW/4, boardFrameY-boardFrameW/4, -reflectorDepth])
-                cube([boardW+boardFrameW, boardH+boardFrameW, reflectorDepth]);
-      }
-      translate([eagleBoardX, eagleBoardY, -boardD+skinBreak*2])
-        miniboard();
-//      translate([-eagleBoardX, -eagleBoardY/2, 0])
-       xxx();
+                cube([boardW+boardFrameW-1, boardH+boardFrameW, reflectorDepth]);
+echo("total w:", boardW+boardFrameW-1, " h:", boardH+boardFrameW, " d:", reflectorDepth );
+        }
+        union() {
+            translate([eagleBoardX, eagleBoardY, -boardD+skinBreak*2])
+                miniboard();
+            segments();
+        }
+    }
+}
+
+
+sectL = [ -5, -5, -5 ];
+sectD = [boardW+boardFrameW*2+10, boardH+boardFrameW*2+6+10, 2];
+
+takeSlice = 0;
+
+if (takeSlice) {
+    intersection() {
+        microclock_reflector();
+        translate(sectL)
+            cube(sectD);
    }
- //        translate([eagleBoardX, eagleBoardY, -boardD+skinBreak*2])
- //     pixels();
 }
 else {
-if (!LIBRARY)
-    miniclock_reflector();
+        microclock_reflector();
 }
